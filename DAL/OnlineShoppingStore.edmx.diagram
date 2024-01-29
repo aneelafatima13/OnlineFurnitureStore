@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="50ee34f0c02b4c86a349faca6e63d644" Name="Diagram1">
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_Cart" Width="1.5" PointX="5.25" PointY="8.125" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_CartStatus" Width="1.5" PointX="3" PointY="8.75" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_Category" Width="1.5" PointX="0.75" PointY="17" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_MemberRole" Width="1.5" PointX="3" PointY="5.375" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_Members" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_Product" Width="1.5" PointX="3" PointY="16.125" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_Roles" Width="1.5" PointX="0.75" PointY="1.625" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_ShippingDetails" Width="1.5" PointX="3" PointY="11.5" />
+        <EntityTypeShape EntityType="OnlineFurnitureStoreModel.Tbl_SlideImage" Width="1.5" PointX="2.75" PointY="0.75" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Cart__CartSt__3B75D760" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Cart__Member__3A81B327" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Cart__Produc__398D8EEE" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK_Tbl_Cart_Tbl_ShippingDetails" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Produ__Categ__3E52440B" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Membe__Membe__3C69FB99" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Membe__RoleI__3D5E1FD2" />
+        <AssociationConnector Association="OnlineFurnitureStoreModel.FK__Tbl_Shipp__Membe__3F466844" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

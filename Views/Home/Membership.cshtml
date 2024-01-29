@@ -1,0 +1,53 @@
+﻿@model OnlineFurnitureStore.DAL.Tbl_Members
+@{
+    ViewBag.Title = "Membership";
+    Layout = "~/Views/Shared/_SubPageLayout.cshtml";
+}
+
+<div class="sub_page">
+    <!-- contact section -->
+
+    <section class="contact_section layout_padding">
+        <div class="container ">
+            <div class="heading_container">
+                <h2 class="">
+                    Add Membership
+                </h2>
+            </div>
+
+        </div>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-6">
+                    @using (Html.BeginForm("Membership", "Home", FormMethod.Post))
+                    {
+                        <div>
+                            @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name" })
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email" })
+                        </div>
+                        <div>
+                            @Html.PasswordFor(model => model.Password, new { placeholder = "Password" })
+                        </div>
+                       
+                        <div class="d-flex ">
+                            <button>
+                                Add Shipping Details
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-6">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- end contact section -->
+</div>

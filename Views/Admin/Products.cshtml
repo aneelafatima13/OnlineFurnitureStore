@@ -1,0 +1,63 @@
+﻿@model List<OnlineFurnitureStore.DAL.Tbl_Product>
+
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Products</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-3">
+        <div class="card-header py-3">
+            <h6 class="m-1 font-weight-bold text-primary">
+                <i class="fas fa-fw fa-table"></i><span>Product Details</span>
+                <a href="../Admin/AddProduct" class="btn btn-info fa-pull-right fa fa-plus">Add Product</a>
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Sr.No</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Sr.No</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@(Model.IndexOf(item)+1)</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td>@Html.ActionLink("Edit", "EditProduct", new { productId = item.ProductId })</td>
+                        </tr>
+                           
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
