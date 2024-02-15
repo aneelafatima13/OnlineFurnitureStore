@@ -1,6 +1,6 @@
 ﻿@using OnlineFurnitureStore.Models.Home;
 @{
-    ViewBag.Title = "ConformDetails";
+    ViewBag.Title = "ConformDetailsprev";
     Layout = "~/Views/Shared/_SubPageLayout.cshtml";
 }
 
@@ -55,12 +55,12 @@
                             Total = Convert.ToInt32(@Total + lineTotal);
 
                             Session["SesTotal"] = Total;
-                         <input type="hidden" id="product-id" class="productId" name="ProductId" value="@item.Product.ProductId" />
+                            <input type="hidden" id="product-id" class="productId" name="ProductId" value="@item.Product.ProductId" />
                             <tr>
                                 <td>@item.Product.ProductName</td>
                                 <td>@item.Product.Price</td>
-                                <td id="cartProductQuantity">@item.Quantity</td>
-                                <td id="cartProductTotal">@lineTotal</td>
+                                <td class="cartItems" id="cartProductQuantity">@item.Quantity</td>
+                                <td class="cartItems" id="cartProductTotal">@lineTotal</td>
                             </tr>
                         }
 
@@ -108,28 +108,32 @@
     <!-- end contact section -->
 </div>
 @section scripts{
-    <script>
+    <!-- Inside your HTML code, after the table -->
+    @*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>*@
+<script>
     $(document).ready(function () {
         // Function to send data to the server
         function sendDataToServer() {
             var cartItems = [];
 
-            // Loop through each row in the table to collect cart item data
-            $("table tbody tr").each(function () {
-                var productId = $(this).find("#product-id").val();
-                var quantity = $(this).find("#cartProductQuantity").text();
-                var total = $(this).find("#cartProductTotal").text();
+            $(".productId").each(function () {
+                var productId = $(this).val();
+                quantity = $(this).closest("tr").find("#cartProductQuantity").text();
+                total = $(this).closest("tr").find("#cartProductTotal").text();
+            
+    // Create a cart item object
+    var cartItem = {
+        ProductId: productId,
+        MemberId: $("#MemberId").val(),
+        CartProductQuantity: quantity,
+        CartProductTotalPrice: total,
+        ShippingId: $("#ShippingDetailId").val()
+    };
 
-                var cartItem = {
-                    ProductId: productId,
-                    MemberId: $("#MemberId").val(),
-                    CartProductQuantity: quantity,
-                    CartProductTotalPrice: total,
-                    ShippingId: $("#ShippingDetailId").val()
-                };
+    // Push the cart item to the array
+    cartItems.push(cartItem);
+});
 
-                cartItems.push(cartItem);
-            });
 
             // Prepare the data to be sent
             var data = {
@@ -160,7 +164,7 @@
             sendDataToServer();
         });
     });
-    </script>
+</script>
 
 
 

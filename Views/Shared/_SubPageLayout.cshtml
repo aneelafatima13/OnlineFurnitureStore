@@ -34,88 +34,82 @@
 </head>
 <body class="sub_page">
     <div class="hero_area">
-            <header class="header_section">
-                <div class="container-fluid">
-                    <nav class="navbar navbar-expand-lg custom_nav-container">
-                        <a class="navbar-brand" href="../Home/Index">
-                            <img src="~/images/logo.png" alt="" />
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+        <header class="header_section">
+            <div class="container-fluid">
+                <nav class="navbar navbar-expand-lg custom_nav-container">
+                    <a class="navbar-brand" href="../Home/Index">
+                        <img src="~/images/logo.png" alt="" />
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav  ">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="../Home/Index">Home <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="../Home/About"> About</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="../Home/Shop">Shop </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="../Home/Furniture"> Furniture </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="../Home/Contact">Contact us</a>
-                                </li>
-                            </ul>
-                            <div class="user_option">
-                                <div class="dropdown show">
-                                    <a class="pr-3" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-shopping-cart"></i>
-                                    </a>
-                                    <div class="dropdown-menu pr-3 pr-sm-2" aria-labelledby="dropdownMenuLink">
-                                        @if (Session["cart"] != null)
-                                        {
-                                            foreach (Item item in (List<Item>)Session["cart"])
-                                            {
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="../Home/Index">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../Home/About"> About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../Home/Shop">Shop </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../Home/Furniture"> Furniture </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../Home/Contact">Contact us</a>
+                            </li>
+                        </ul>
+                        <div class="user_option">
+                           
+                            <a class="pr-3" href="#" role="button" id="showCartBtn">
+                                <i class="fa fa-shopping-cart"></i>
+                            </a>
+                           
+                            <a href="@Url.Action("LoginMembership", "Home")">
+                                <img src="~/images/user.png" alt="">
+                                <span>
+                                    Login
+                                </span>
+                            </a>
+                            <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                            </form>
 
-                                                <a class="dropdown-item" href="@Url.Action("RemoveFromCartShop", "Home", new { productId=item.Product.ProductId})">@item.Product.ProductName (@item.Quantity) <i class="fa fa-times"></i></a>
-
-                                            }
-                                        }
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item active" href="../Home/Checkout">Checkout</a>
-                                    </div>
-                                </div>
-                                <a href="@Url.Action("LoginMembership", "Home")">
-                                    <img src="~/images/user.png" alt="">
-                                    <span>
-                                        Login
-                                    </span>
-                                </a>
-                                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                                    <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                                </form>
-
-                            </div>
                         </div>
-                        <div>
-                            <div class="custom_menu-btn ">
-                                <button>
-                                    <span class=" s-1">
-
-                                    </span>
-                                    <span class="s-2">
-
-                                    </span>
-                                    <span class="s-3">
-
-                                    </span>
-                                </button>
-                            </div>
+                    </div>
+                    <div id="cartListModal" class="modallist">
+                        <div class="modallist-content">
+                            <span class="close">&times;</span>
+                            <div id="cartListModalContent"></div>
                         </div>
+                    </div>
 
-                    </nav>
-                </div>
-            </header>
+                    <div>
+                        <div class="custom_menu-btn ">
+                            <button>
+                                <span class=" s-1">
+
+                                </span>
+                                <span class="s-2">
+
+                                </span>
+                                <span class="s-3">
+
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </nav>
+            </div>
+        </header>
     </div>
-    <br />
-    <br />
+    @*<br />
+    <br />*@
     <div class="container-fluid">
         @RenderBody()
     </div>
@@ -265,6 +259,82 @@
     <script type="text/javascript" src="~/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="~/js/bootstrap.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
+    </script>
+    <script>
+    // Ajax call to load the partial view content
+    $('#showCartBtn').click(function () {
+        $.ajax({
+            url: '@Url.Action("CartPartial", "Home")', // Action to render the partial view
+            type: 'GET',
+            success: function (result) {
+                $('#cartListModalContent').html(result);
+                $('#cartListModal').show(); /// Add animation classes
+            },
+            error: function (xhr, status, error) {
+                console.log(error); // Handle errors
+            }
+        });
+    });
+        $('.close').click(function () {
+            $('#cartListModal').hide();
+        });
+
+        //// Close modal when clicking outside
+        //$(document).mouseup(function (e) {
+        //    var container = $(".modallist-content");
+        //    if (!container.is(e.target) && container.has(e.target).length === 0) {
+        //        $('#cartListModal').hide();
+        //    }
+        //});
+
+// Function to handle adding to cart
+// Function to handle adding to cart
+    function updateQuantity(productId, action) {
+    $.ajax({
+        url: action === 'increase' ? '@Url.Action("IncreaseQty", "Home")' : '@Url.Action("DecreaseQty", "Home")',
+        type: 'GET',
+        data: { productId: productId },
+        success: function (result) {
+            if (result.success) {
+                updateQuantityCallback(productId, result.quantity);
+            } else {
+                console.log("Failed to update quantity.");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(error);
+        }
+    });
+}
+
+function updateQuantityCallback(productId, newQuantity) {
+    var quantityElement = $('#itemQuantity_' + productId);
+    var priceElement = $('#price_' + productId);
+    var lineTotalElement = $('#lineTotal_' + productId);
+
+    var price = parseFloat(priceElement.text());
+    if (!isNaN(price)) {
+        var newLineTotal = newQuantity * price;
+        quantityElement.text(newQuantity);
+        lineTotalElement.text(newLineTotal);
+
+        updateTotalAmount();
+    } else {
+        console.log("Price is not a valid number.");
+    }
+}
+
+function updateTotalAmount() {
+    var total = 0;
+    $('span[id^="lineTotal_"]').each(function() {
+        var lineTotal = parseFloat($(this).text());
+        if (!isNaN(lineTotal)) {
+            total += lineTotal;
+        }
+    });
+    $('#totalAmount').text(total);
+}
+
     </script>
     <script type="text/javascript">
         $(".owl-carousel").owlCarousel({

@@ -1,0 +1,113 @@
+﻿@model OnlineFurnitureStore.DAL.Tbl_ShippingDetails
+@*<div class="container">
+    <br />
+    @using (Html.BeginForm("CheckoutDetails", "Home", FormMethod.Post, new { id = "checkoutForm" }))
+    {*@
+        <div class="row">
+            <div class="col-lg-4">
+                <div>
+                    <label>Member Name:</label>
+                    <input type="text" id="MemberName" name="MemberName" value="@ViewBag.MemberName" readonly />
+                    <input type="hidden" id="MemberId" name="MemberId" value="@ViewBag.MemberId" />
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div>
+                    <label>Address:</label>
+                    @Html.TextBoxFor(model => model.Adress, new { placeholder = "Enter your Address", @rows = "3", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div>
+                    <label>Country name:</label>
+                    @Html.TextBoxFor(model => model.Country)
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <label>State Name:</label>
+                    @Html.TextBoxFor(model => model.State)
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <label>City Name:</label>
+                    @Html.TextBoxFor(model => model.City)
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <label>Zip Code:</label>
+                    @Html.TextBoxFor(model => model.ZipCode)
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-3">
+                <div>
+                    <label>Amount to Pay:</label>
+                    @Html.TextBoxFor(model => model.AmountPaid, new { @readonly = "readonly", @Value = Session["SesTotal"] })
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <label>Payment Type:</label>
+                <div class="row">
+                    <div class="col-lg-12">
+                        @Html.RadioButtonFor(model => model.PaymentType, "CashOnDelivery", new { @checked = "checked", id = "cashOnDeliveryRadio", onchange = "handlePaymentTypeChange()" }) Cash on Delivery <br />
+                        @Html.RadioButtonFor(model => model.PaymentType, "DebitCard", new { id = "debitCardRadio", onchange = "handlePaymentTypeChange()" }) Debit Card
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div id="cashOnDeliveryDetails">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Shipping Amount:</label>
+                            <input type="text" value="200" readonly />
+                            @*<p>Shipping Amount: 200</p>*@
+                        </div>
+                        <div class="col-lg-6">
+                            @{
+                                decimal totalAmount = 0; // Default value in case Session["SesTotal"] is null or not convertible to int
+                                                         // Check if Session["SesTotal"] is not null and is convertible to int
+                                if (Session["SesTotal"] != null && int.TryParse(Session["SesTotal"].ToString(), out int sesTotal))
+                                {
+                                    // Calculate the total amount by adding the fixed shipping amount (200) to sesTotal
+                                    totalAmount = sesTotal + 200;
+                                    Session["SesTotal"] = totalAmount;
+                                }
+                            }
+                            <label>Total Amount to Paid:</label>
+                            @Html.TextBoxFor(model => model.AmountPaid, new { @readonly = "readonly", @Value = Session["SesTotal"] })
+                        </div>
+                    </div>
+                </div>
+                <div id="debitCardDetails" style="display:none;">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Debit Card Number:</label>
+                            <input type="text" id="DebitCardNumber" name="DebitCardNumber" placeholder="Enter Debit Card Number" />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Debit Card Expiry Date:</label>
+                            <input type="text" id="DebitCardExpiry" name="DebitCardExpiry" placeholder="Enter Expiry Date" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="d-flex ">
+
+            <button class="dropdown-button" onclick="submitForm()">Confirm Details</button>
+
+
+        </div>
+    }*@
+@*</div>*@
+                                 

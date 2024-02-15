@@ -1,10 +1,11 @@
 ﻿@model OnlineFurnitureStore.Models.Home.HomeIndexViewModel
-@using PagedList;
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Shop";
     Layout = "~/Views/Shared/_SubPageLayout.cshtml";
 }
+<br />
+<br />
 <div class="sub_page">
     <!-- brand section -->
 
@@ -60,10 +61,25 @@
                                 @if (item.Quantity > 0)
                                 {
                                     <h6>Available</h6>
+                                    <table align="center" class="custom-table">
+                                        <tr>
+                                            <td>
+                                                <a href="@Url.Action("DecreaseQty", "Home", new { productId = item.ProductId })">
+                                                    <i class="fa fa-minus"></i>
+                                                </a>
+                                            </td>
+                                            <td>1</td>
+                                            <td>
+                                                <a href="@Url.Action("AddToCart", "Home", new { productId = item.ProductId, url="shop" })">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                     <br />
                                     using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Shop" }, FormMethod.Post))
                                     {
-                                        <button type="submit" class="btn btn-success">Add to Cart</button>
+                                        <button type="submit" class="btn btn-success clrchange">Add to Cart</button>
                                     }
                                 }
                                 else
@@ -92,6 +108,56 @@
         </div>
     </section>
 
-
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cart Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <h6>Your product is successfully inserted into cart!!</h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- end brand section -->
 </div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (event) {
+                // Prevent the default form submission behavior
+                event.preventDefault();
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+
+                // Send the form data to the server using AJAX
+                $.ajax({
+                    url: $(this).attr("action"),  // Get the form's action URL
+                    type: $(this).attr("method"), // Get the form's method (POST)
+                    data: formData,               // Use the serialized form data
+                    success: function (response) {
+                        // Handle the success response from the server
+                        console.log("Item added to cart successfully!");
+                       /* alert("Your item is successfully added to the cart!");*/
+                        $("#cartModal").modal("show");
+                        // Optionally, you can update the page or perform other actions
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors
+                        console.error("Error adding item to cart:", error);
+                    }
+                });
+            });
+        });
+
+    </script>
+    }

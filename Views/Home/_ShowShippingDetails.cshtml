@@ -1,0 +1,27 @@
+﻿
+@model OnlineFurnitureStore.DAL.Tbl_ShippingDetails
+
+<div class="row">
+    <div class="col-lg-11">
+        <h5><strong>Member Name:</strong> @ViewBag.MemberName</h5>
+    </div>
+    <div class="col-lg-1">
+        <a id="editshippingdetails" class="fa-pull-right" onclick="editShippingdetails()"><li class="fa fa-pencil"></li></a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <h6><strong>Email:</strong> @Model.Tbl_Members.EmailId</h6>
+        <h6><strong>Country:</strong> @Model.Country</h6>
+        <h6><strong>City:</strong> @Model.City</h6>
+        <h6><strong>Payment Type:</strong> @Model.PaymentType</h6>
+
+    </div>
+    <div class="col-lg-6">
+        <h6><strong>Address:</strong> @Model.Adress</h6>
+        <h6><strong>Provence:</strong> @Model.State</h6>
+        <h6><strong>ZipCode:</strong> @Model.ZipCode</h6>
+        <h6><strong>Amount to Paid:</strong> @Model.AmountPaid</h6>
+    </div>
+</div>
+

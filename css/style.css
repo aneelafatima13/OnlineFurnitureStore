@@ -4,9 +4,88 @@ body {
   background-color: #ffffff;
 }
 
+/*.grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+}*/
+
+.dropdown-button {
+    position: relative;
+    display: inline-block;
+    width: calc(100% - 10px); /* Adjust for grid gap */
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+    .dropdown-button::after {
+        content: "\25BE"; /* Unicode character for down arrow */
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+    }
+/* CSS for the modal */
+.modallist {
+    display: none; /* Hide modal by default */
+    position: fixed;
+    top: 0;
+    right: 0; /* Position modal to the right side */
+    width: 38%; /* 1/3 of the screen width */
+    height: 100%;
+    background-color: #fefefe;
+    /*background-color: rgba(0, 0, 0, 0.5);*/ /* Semi-transparent background */
+    z-index: 1000; /* Ensure modal appears above other content */
+    overflow-x: hidden;
+    overflow-y: auto;
+    /*padding-top: 60px; *//* Space for header */
+}
+
+.modallist-content {
+    background-color: #fefefe;
+    margin-top: 60px; /* Space for header */
+    padding: 20px;
+    /*border: 1px solid #888;
+    border-radius: 10px;*/
+    width: 100%; /* Occupy full width */
+    height: 100%; /* Occupy full height */
+    
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+
+.custom-table {
+    border: 1px solid #218838;
+    border-collapse: collapse; /* Ensure cells have independent borders */
+    border-spacing: 5px;
+    border-radius: 5px;
+}
+    .custom-table td {
+        border: 1px solid #218838; /* Border for all four sides of each cell */
+        padding: 5px;
+        border-radius: 5px; /* Add padding inside each cell */
+    }
+
 .layout_padding {
-  padding-top: 90px;
-  padding-bottom: 90px;
+    padding-top: 90px;
+    padding-bottom: 90px;
 }
 
 .layout_padding2 {
@@ -742,6 +821,18 @@ a:focus {
 .brand_section .brand_container .box:hover h6.price {
   color: #252525;
 }
+    .brand_section .brand_container .box:hover table a {
+       color: black;
+    }
+    .brand_section .brand_container .box:hover table.custom-table td {
+        border: 1px solid black;
+        border-collapse: collapse; /* Ensure cells have independent borders */
+        padding: 7px;
+        border-radius: 5px;
+    }
+    .brand_section .brand_container .box:hover button.btn-success {
+        color: #fafafc;
+    }
 
 .brand_section .brand-btn {
   display: inline-block;
@@ -851,9 +942,9 @@ a:focus {
   margin-bottom: 65px;
 }
 
-.contact_section form {
+/*.contact_section form {
   padding-right: 35px;
-}
+}*/
 
 .contact_section input {
   width: 100%;

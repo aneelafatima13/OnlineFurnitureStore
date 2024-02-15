@@ -1,88 +1,156 @@
-﻿@using OnlineFurnitureStore.Models.Home;
+﻿
 @{
     ViewBag.Title = "CheckoutDetails";
     Layout = "~/Views/Shared/_SubPageLayout.cshtml";
 }
 
-<div class="container">
-    <div class="heading_container">
-        <h2>
-            Checkout Details
-        </h2>
-    </div>
-    <br />
-    @if (Session["cart"] == null)
-    {
-        <div class="alert alert-danger">
-            <strong>No product added to cart!</strong>
+
+<div class="sub_page">
+    <section class="contact_section layout_padding">
+        <div class="container">
+            <button class="dropdown-button">Add Shipping Details</button>
+            <br />
+            <div id="showshippingdetails" style="padding:30px"></div>
+            @using (Html.BeginForm("CheckoutDetails", "Home", FormMethod.Post, new { id = "checkoutForm" }))
+            {
+                <div id="shippingdetails" style="padding:20px">
+                    @{ Html.RenderPartial("_ShippingDetails"); }
+                </div>
+                <button class="dropdown-button" onclick="submitForm()">Confirm Details</button>
+            }
+            <br />
+            <div id="conformdetails" style="padding:30px"></div>
         </div>
+    </section>
+</div>
+@section scripts{
 
-    }
-    else
-    {
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Line Total</th>
+    @*<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>*@
+<script>
+        function submitForm() {
+            $('#checkoutForm').submit(function (event) {
+                // Prevent the default form submission
+                event.preventDefault();
 
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int Total = 0;
-                }
-                @foreach (Item item in (List<Item>)Session["cart"])
-                {
-                    int lineTotal = Convert.ToInt32(item.Quantity * item.Product.Price);
-                    Total = Convert.ToInt32(@Total + lineTotal);
+                // Serialize the form data
+                var formData = $(this).serialize();
 
-                    Session["SesTotal"] = Total;
-
-                    <tr>
-                        <td>@item.Product.ProductName</td>
-                        <td>@item.Product.Price</td>
-                        <td>@item.Quantity</td>
-                        <td>@lineTotal</td>
-                    </tr>
-                }
-
-                <tr>
-
-                    <td colspan="4" class="text-right"><b>Total Amount: @Total</b></td>
-
-                </tr>
-            </tbody>
-        </table>
-        <button class="btn btn-outline-success view-images-btn" data-toggle="modal" data-target="#Modal">Proceed to Payment >></button>
-
-        
+                // Send the form data via AJAX
+                $.ajax({
+                    url: $(this).attr('action'), // Form action attribute
+                    type: $(this).attr('method'), // Form method attribute
+                    data: formData,
+                    success: function (response) {
+                        // Retrieve MemberId and ShippingId from the response
+                        var memberId = response.MemberId;
+                        var shippingId = response.ShippingId;
+                        loadConfirmDetails(memberId, shippingId);
+                        loadShowShippingDetails(memberId, shippingId);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle the error response
+                        console.error('Error:', error);
+                        // You can display an error message or perform other error handling actions here
+                    }
+                });
+            });
     }
 
-</div>
-<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Proceed to Payment >></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <h6>Do you want to proceed with your membership account to get discounts and to know about order status or history?</h6>
-                <a href="@Url.Action("LoginMembership", "Home")" class="btn btn-success">Login Membership Account>></a><br />
-                <h6>or</h6>
-                <h6>Do you want to proceed with your Order?</h6>
-                <a href="@Url.Action("AllShippingDetails", "Home")" class="btn btn-success">Place Shipping Details >></a>
+        function loadConfirmDetails(memberId, shippingId) {
+        $.get('@Url.Action("ConformDetails", "Home")', { MemberId: memberId, ShippingId: shippingId }, function (partialView) {
+            console.log("Partial View:", partialView);
+            $('#conformdetails').html(partialView);
+            $('#conformdetails').show();
+        });
+        }
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+    function loadShowShippingDetails(memberId, shippingId) {
+        $.get('@Url.Action("ShowShippingDetails", "Home")', { MemberId: memberId, ShippingId: shippingId }, function (partialView) {
+            console.log("Partial View:", partialView);
+            $('#showshippingdetails').html(partialView);
+            $('#shippingdetails').hide();
+            $('#showshippingdetails').show();
+        });
+    }
+
+
+        function handlePaymentTypeChange() {
+            if ($('#cashOnDeliveryRadio').prop('checked')) {
+                $('#cashOnDeliveryDetails').show();
+                $('#debitCardDetails').hide();
+            } else if ($('#debitCardRadio').prop('checked')) {
+                $('#cashOnDeliveryDetails').hide();
+                $('#debitCardDetails').show();
+            }
+        }
+    function sendDataToServer() {
+        var cartItems = [];
+
+        $(".productId").each(function () {
+            var productId = $(this).val();
+            quantity = $(this).closest("tr").find("#cartProductQuantity").text();
+            total = $(this).closest("tr").find("#cartProductTotal").text();
+
+            // Create a cart item object
+            var cartItem = {
+                ProductId: productId,
+                MemberId: $("#MemberId").val(),
+                CartProductQuantity: quantity,
+                CartProductTotalPrice: total,
+                ShippingId: $("#ShippingDetailId").val()
+            };
+
+            // Push the cart item to the array
+            cartItems.push(cartItem);
+        });
+
+
+        // Prepare the data to be sent
+        var data = {
+            cartItems: cartItems
+        };
+
+        // Send the data to the server using AJAX
+        $.ajax({
+            type: "POST",
+            url: "/Home/SaveCartItems", // Replace with your actual controller and action
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                // Handle success
+                console.log("Data sent successfully");
+                $(".saveCart").prop("disabled", true);
+            },
+            error: function (error) {
+                // Handle error
+                console.log("Error sending data: " + error);
+            }
+        });
+    }
+
+    function editShippingdetails() {
+            // Make an AJAX call to the CheckoutDetails action
+            $.ajax({
+                url: '@Url.Action("EditCheckoutDetails", "Home")',
+                type: 'GET',
+                success: function (partialView) {
+                    // Hide the showshippingdetails div
+                    $('#showshippingdetails').hide();
+                    // Show the shippingdetails div
+                    $('#shippingdetails').html(partialView).show();
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors if needed
+                    console.error('Error:', error);
+                }
+            });
+        }
+        // Initial check on page load
+        $(document).ready(function () {
+            handlePaymentTypeChange();
+
+        });
+</script>
+
+}

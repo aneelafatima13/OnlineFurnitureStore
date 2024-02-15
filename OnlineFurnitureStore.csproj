@@ -2173,13 +2173,17 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Home\Checkout.cshtml" />
-    <Content Include="Views\Home\CheckoutDetails.cshtml" />
+    <Content Include="Views\Home\_.cshtml" />
     <Content Include="Views\Home\Membership.cshtml" />
-    <Content Include="Views\Home\ShippingDetails.cshtml" />
+    <Content Include="Views\Home\CheckoutDetails.cshtml" />
     <Content Include="Views\Home\LoginMembership.cshtml" />
     <Content Include="Views\Home\AllShippingDetails.cshtml" />
-    <Content Include="Views\Home\ConformDetails.cshtml" />
+    <Content Include="Views\Home\ConformDetailsprev.cshtml" />
+    <Content Include="Views\Home\_CartList.cshtml" />
+    <Content Include="Views\Home\_ShippingDetails.cshtml" />
+    <Content Include="Views\Home\_ConfirmDetails.cshtml" />
+    <Content Include="Views\Home\_ShowShippingDetails.cshtml" />
+    <Content Include="Views\Home\_Member.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

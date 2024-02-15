@@ -262,46 +262,46 @@
         <div class="brand_container layout_padding2">
             @foreach (var item in Model.ListOfProducts)
             {
-            <div class="box">
+                <div class="box">
 
 
-                <div class="new">
-                    @if (item.IsFeatured == true)
-                    {
-                        <h5>New</h5>
-                    }
-                    else
-                    {
-                        <h5>Old</h5>
-                    }
-                </div>
-                <div class="img-box">
-                    <img src="~/ProductImg/@item.ProductImage" alt="">
-                </div>
-                <div class="detail-box">
-                    <h6 class="price">
-
-                        Rs.@item.Price
-                    </h6>
-                    <h6>
-                        @item.ProductName
-                    </h6>
-                    @if (item.Quantity > 0)
-                    {
-                        <h6>Available</h6>
-                        <br />
-                        using (Html.BeginForm("AddToCart", "Home", new {productId = item.ProductId, url = "Index" }, FormMethod.Post))
+                    <div class="new">
+                        @if (item.IsFeatured == true)
                         {
-                            <button type="submit" class="btn btn-success">Add to Cart</button>
+                            <h5>New</h5>
                         }
-                    }
-                    else
-                    {
-                        <h6>Not Available</h6>
-                    }
+                        else
+                        {
+                            <h5>Old</h5>
+                        }
+                    </div>
+                    <div class="img-box">
+                        <img src="~/ProductImg/@item.ProductImage" alt="">
+                    </div>
+                    <div class="detail-box">
+                        <h6 class="price">
+
+                            Rs.@item.Price
+                        </h6>
+                        <h6>
+                            @item.ProductName
+                        </h6>
+                        @if (item.Quantity > 0)
+                        {
+                            <h6>Available</h6>
+                            <br />
+                            using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Index" }, FormMethod.Post))
+                            {
+                                <button type="submit" class="btn btn-success">Add to Cart</button>
+                            }
+                        }
+                        else
+                        {
+                            <h6>Not Available</h6>
+                        }
+                    </div>
+                    <br />
                 </div>
-                <br />
-            </div>
             }
 
         </div>
@@ -440,3 +440,54 @@
 </section>
 
 <!-- end client section -->
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cart Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <h6>Your product is successfully inserted into cart!!</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (event) {
+                // Prevent the default form submission behavior
+                event.preventDefault();
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+
+                // Send the form data to the server using AJAX
+                $.ajax({
+                    url: $(this).attr("action"),  // Get the form's action URL
+                    type: $(this).attr("method"), // Get the form's method (POST)
+                    data: formData,               // Use the serialized form data
+                    success: function (response) {
+                        // Handle the success response from the server
+                        console.log("Item added to cart successfully!");
+                        /* alert("Your item is successfully added to the cart!");*/
+                        $("#cartModal").modal("show");
+                        // Optionally, you can update the page or perform other actions
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors
+                        console.error("Error adding item to cart:", error);
+                    }
+                });
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿
+@model OnlineFurnitureStore.DAL.Tbl_Members 
+<div class="container">
+<div class="row">
+    <div class="col-md-4">
+        <div>
+            @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div>
+            @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div>
+            @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email" })
+        </div>
+    </div>
+</div>
+</div>
