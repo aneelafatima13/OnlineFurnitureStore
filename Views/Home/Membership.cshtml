@@ -20,21 +20,23 @@
             <div class="row">
 
                 <div class="col-md-6">
-                    @using (Html.BeginForm("Membership", "Home", FormMethod.Post))
+                    @using (Html.BeginForm("Membership", "Home", FormMethod.Post, new { id = "membershipform" }))
                     {
-                        <div>
+                        <div class="mform">
                             @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name" })
                         </div>
-                        <div>
+                        <div class="mform">
                             @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
                         </div>
-                        <div>
+                        <div class="mform">
                             @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email" })
                         </div>
-                        <div>
-                            @Html.PasswordFor(model => model.Password, new { placeholder = "Password" })
+                        <div class="mform">
+                            @Html.PasswordFor(model => model.Password, new { placeholder = "Password", id = "password-input" })
                         </div>
-                       
+                        <div class="mform">
+                            <input type="password" id="confirmPassword" name="confirmPassword" @*class="form-control"*@ value="@Model.Password" placeholder="Confirm it">
+                        </div>
                         <div class="d-flex ">
                             <button>
                                 Checkout Details
@@ -51,3 +53,97 @@
 
     <!-- end contact section -->
 </div>
+@section scripts{
+
+    <script>
+
+        $.validator.addMethod("ValidNumber", function (value, element) {
+            // Define your password criteria here
+            return /^03\d{9}$/.test(value);
+        }, "Your Phone number muust start with 03 and total 11 digits");
+
+        jQuery.validator.addMethod("confirmPassword", function (value, element, param) {
+            return this.optional(element) || value === $(param).val();
+        }, "Passwords do not match.");
+
+        jQuery.validator.addMethod("strongPassword", function (value, element) {
+            // Define your password criteria here
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,}/.test(value);
+        }, "Your password must contain at least one lowercase letter, one uppercase letter and one digit and be at least 4 characters long.");
+        $('#membershipform').validate({
+            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+            errorElement: 'div',
+            errorPlacement: function (error, e) {
+                e.parents('.mform > div').append(error);
+            },
+            highlight: function (e) {
+                $(e).closest('.mform').addClass('has-error');
+               /* $(e).closest('.help-block').remove();*/
+            },
+            success: function (e) {
+                // You can use the following if you would like to highlight with green color the input after successful validation!
+                e.closest('.mform').addClass('has-success'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                /*e.closest('.help-block').remove();*/
+            },
+            rules: {
+                FirstName: {
+                    required: true  
+                },
+                LastName: {
+                    required: true  
+                },
+                Email: {
+                    required: true,
+                    email: true
+                },
+                Password: {
+                    required: true,
+                    strongPassword: true
+                },
+                confirmPassword: {
+                    required: true,
+                    equalTo: "#password-input" // reference to the password field
+                },
+                PhoneNo: {
+                    required: true,
+                    ValidNumber: true
+                }
+            },
+            messages: {
+                
+                FirstName: {
+                    required: 'Please enter a username',
+                    minlength: 'Your username must consist of at least 3 characters'
+                },
+                LastName: {
+                    required: 'Please enter a username',
+                    minlength: 'Your username must consist of at least 3 characters'
+                },
+                Email: 'Please enter a valid email address',
+                Password: {
+                    required: 'Please provide a password',
+                    strongPassword: 'Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.'
+
+                },
+                confirmPassword: {
+                    required: 'Please enter password.',
+                    equalTo: 'Please enter the same password as above',
+                    strongPassword: 'Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.'
+
+                },
+                PhoneNo: {
+                    required: 'Please enter a Phone No',
+                    ValidNumber: 'Your Phone number muust start with 03 and total 11 digits'
+                }
+                
+            }
+        });
+
+        $('#membershipform').submit(function () {
+            if ($(this.valid())) {
+                $('#membershipform').submit();
+            }
+        });
+    </script>
+    
+    }

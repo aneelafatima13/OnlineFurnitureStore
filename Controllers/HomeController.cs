@@ -6,7 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Mvc;
 using System.Data.Entity;
-
+using OnlineFurnitureStore.Repository;
 
 namespace OnlineFurnitureStore.Controllers
 {
@@ -14,6 +14,7 @@ namespace OnlineFurnitureStore.Controllers
     public class HomeController : Controller
     {
         OnlineFurnitureStoreEntities ctx = new OnlineFurnitureStoreEntities();
+        public GenericUnitOfWork _unitofwork = new GenericUnitOfWork();
         // GET: Home
         public ActionResult Index(string search, int? page)
         {
@@ -26,8 +27,7 @@ namespace OnlineFurnitureStore.Controllers
             var cart = (List<Item>)Session["cart"];
             return PartialView("_CartList", cart);
         }
-
-        public ActionResult AddToCart(int productId, string url)
+        public ActionResult AddToCart(int productId, int quantity, string url)
         {
             if (Session["cart"] == null)
             {
@@ -36,45 +36,82 @@ namespace OnlineFurnitureStore.Controllers
                 cart.Add(new Item()
                 {
                     Product = product,
-                    Quantity = 1
+                    Quantity = quantity // Use the provided quantity parameter
                 });
                 Session["cart"] = cart;
             }
             else
             {
                 List<Item> cart = (List<Item>)Session["cart"];
-                var count = cart.Count();
-                var product = ctx.Tbl_Product.Find(productId);
-                for (int i = 0; i < count; i++)
+                var existingItem = cart.FirstOrDefault(item => item.Product.ProductId == productId);
+
+                if (existingItem != null)
                 {
-                    if (cart[i].Product.ProductId == productId)
+                    // If the product already exists in the cart, update its quantity
+                    existingItem.Quantity += quantity;
+                }
+                else
+                {
+                    var product = ctx.Tbl_Product.Find(productId);
+                    cart.Add(new Item()
                     {
-                        int prevQty = cart[i].Quantity;
-                        cart.Remove(cart[i]);
-                        cart.Add(new Item()
-                        {
-                            Product = product,
-                            Quantity = prevQty + 1
-                        });
-                        break;
-                    }
-                    else
-                    {
-                        var prd = cart.Where(x => x.Product.ProductId == productId).SingleOrDefault();
-                        if (prd == null)
-                        {
-                            cart.Add(new Item()
-                            {
-                                Product = product,
-                                Quantity = 1
-                            });
-                        }
-                    }
+                        Product = product,
+                        Quantity = quantity // Use the provided quantity parameter
+                    });
                 }
                 Session["cart"] = cart;
             }
             return Redirect(url);
         }
+
+        //public ActionResult AddToCart(int productId, int quantity, string url)
+        //{
+        //    if (Session["cart"] == null)
+        //    {
+        //        List<Item> cart = new List<Item>();
+        //        var product = ctx.Tbl_Product.Find(productId);
+        //        cart.Add(new Item()
+        //        {
+        //            Product = product,
+        //            Quantity = 1
+        //        });
+        //        Session["cart"] = cart;
+        //    }
+        //    else
+        //    {
+        //        List<Item> cart = (List<Item>)Session["cart"];
+        //        var count = cart.Count();
+        //        var product = ctx.Tbl_Product.Find(productId);
+        //        for (int i = 0; i < count; i++)
+        //        {
+        //            if (cart[i].Product.ProductId == productId)
+        //            {
+        //                int prevQty = cart[i].Quantity;
+        //                cart.Remove(cart[i]);
+        //                cart.Add(new Item()
+        //                {
+        //                    Product = product,
+        //                    Quantity = prevQty + 1
+        //                });
+        //                break;
+        //            }
+        //            else
+        //            {
+        //                var prd = cart.Where(x => x.Product.ProductId == productId).SingleOrDefault();
+        //                if (prd == null)
+        //                {
+        //                    cart.Add(new Item()
+        //                    {
+        //                        Product = product,
+        //                        Quantity = 1
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        Session["cart"] = cart;
+        //    }
+        //    return Redirect(url);
+        //}
 
         //public ActionResult AddToCart(int productId, string url)
         //{
@@ -227,11 +264,20 @@ namespace OnlineFurnitureStore.Controllers
             return View();
         }
 
-        public ActionResult Shop(string search, int? page)
+        public ActionResult Shop(string ProductName, string Category, string Price, string Quantity, int? ActiveFlag, int? page)
         {
-            HomeIndexViewModel model = new HomeIndexViewModel();
-            return View(model.CreateModel(search, 20, page));
+            var products = _unitofwork.GetProducts(ProductName, Category, Price, Quantity, ActiveFlag, page);
+
+            //if (Request.IsAjaxRequest())
+            //    return PartialView("_List", employees);
+            //else
+                return View(products);
         }
+        //public ActionResult Shop(string search, int? page)
+        //{
+        //    HomeIndexViewModel model = new HomeIndexViewModel();
+        //    return View(model.CreateModel(search, 20, page));
+        //}
 
         public ActionResult Furniture()
         {
@@ -373,6 +419,7 @@ namespace OnlineFurnitureStore.Controllers
                 return View("Error");
             }
         }
+
         public ActionResult EditCheckoutDetails()
         {
             // Retrieve the member ID from the session

@@ -1,5 +1,6 @@
-﻿@model OnlineFurnitureStore.Models.Home.HomeIndexViewModel
-@using PagedList.Mvc;
+﻿@using OnlineFurnitureStore.DAL
+@using MvcPaging;
+@model IPagedList<Tbl_Product>
 @{
     ViewBag.Title = "Shop";
     Layout = "~/Views/Shared/_SubPageLayout.cshtml";
@@ -19,21 +20,104 @@
                         </h2>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <form method="post">
-                        <div class="olSearch fr">
-                            <input type="text" name="search" placeholder="Enter Keyword" class="inputComn form-control" />
-                            <div class="searchIcon">
-                                <button type="submit" class="searchBtn">
-                                    <img src="~/Images/searchIcon.png" />
-                                </button>
+                @*<div class="col-md-4">
+                        <form method="post">
+                            <div class="olSearch fr">
+                                <input type="text" name="search" placeholder="Enter Keyword" class="inputComn form-control" />
+                                <div class="searchIcon">
+                                    <button type="submit" class="searchBtn">
+                                        <img src="~/Images/searchIcon.png" />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>*@
             </div>
-            <div class="brand_container layout_padding2">
-                @foreach (var item in Model.ListOfProducts)
+            <br />
+            <div class="box" style="background-color: #e4e5e9; padding: 20px">
+                @*<h5>Serach your choice</h5>*@
+                @using (Ajax.BeginForm("Shop", "Home",
+                                      new AjaxOptions { UpdateTargetId = "productsshop", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                                      new { id = "frm-search" }))
+                {
+
+                    @Html.Raw(ViewBag.msg)
+                    <form>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="olSearch fr">
+                                    <input type="text" name="productname" value="@ViewData["ProductName"]" placeholder="Enter Product Name" class="inputComn form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="olSearch fr">
+                                    <input type="text" name="category" value="@ViewData["Category"]" placeholder="Enter Category" class="inputComn form-control" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="olSearch fr">
+                                    <select name="ActiveFlag" placeholder="Enter Availability" class="inputComn form-control">
+                                        @if (ViewData["ActiveFlag"] != null && ViewData["ActiveFlag"].ToString() == "1")
+                                        {
+                                            <option value="-100">All</option>
+                                            <option value="1" selected="selected">Available</option>
+                                            <option value="0">Un Availabile</option>
+                                        }
+                                        else if (ViewData["ActiveFlag"] != null && ViewData["ActiveFlag"].ToString() == "0")
+                                        {
+                                            <option value="-100">All</option>
+                                            <option value="1">Available</option>
+                                            <option value="0" selected="selected">Un Available</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="-100" selected="selected">All</option>
+                                            <option value="1">Available</option>
+                                            <option value="0">Un Available</option>
+                                        }
+                                    </select>
+                                    @* <input type="text" name="search" placeholder="Enter Availability" class="inputComn form-control" />*@
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="olSearch fr">
+                                    <input type="text" name="price" value="@ViewData["Price"]" placeholder="Enter Price" class="inputComn form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="olSearch fr">
+                                    <input type="text" name="quantity" value="@ViewData["Quantity"]" placeholder="Enter Quantity" class="inputComn form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-md-6">
+                                        <div class="searchIcon">
+                                            <button type="submit" class="btn btn-success">
+                                                <img src="~/Images/searchIcon.png" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="searchIcon">
+                                            <button class="btn btn-primary" href="@Url.Action("Shop", "Home")" @*onclick="clearSearch()"*@>
+                                                Cl
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                }
+            </div>
+            <div class="brand_container layout_padding2" id="productsshop">
+                @foreach (var item in Model)
                 {
                     <div class="box">
                         <a href="">
@@ -64,22 +148,28 @@
                                     <table align="center" class="custom-table">
                                         <tr>
                                             <td>
-                                                <a href="@Url.Action("DecreaseQty", "Home", new { productId = item.ProductId })">
+                                                <a href="#" onclick="decreaseQuantity(this)">
                                                     <i class="fa fa-minus"></i>
                                                 </a>
                                             </td>
-                                            <td>1</td>
+                                            @*@Html.Hidden("Quantity", item.Quantity, new { id = "orgquantity" })*@
+                                            @*<td class="quantity">1</td>*@
+                                            <td class="quantity" data-max-quantity="@item.Quantity">1</td>
                                             <td>
-                                                <a href="@Url.Action("AddToCart", "Home", new { productId = item.ProductId, url="shop" })">
+                                                <a href="#" onclick="increaseQuantity(this)">
                                                     <i class="fa fa-plus"></i>
                                                 </a>
                                             </td>
                                         </tr>
+
                                     </table>
                                     <br />
-                                    using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Shop" }, FormMethod.Post))
+                                    using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Shop", id = "addtocartform" }, FormMethod.Post))
                                     {
-                                        <button type="submit" class="btn btn-success clrchange">Add to Cart</button>
+                                        <button type="button" class="btn btn-success clrchange" onclick="addToCart(@item.ProductId, 'Shop', this)">Add to Cart</button>
+
+
+
                                     }
                                 }
                                 else
@@ -93,19 +183,56 @@
                 }
 
             </div>
-            <div class="container">
-                @Html.PagedListPager(Model.ListOfProducts, page => Url.Action("Index", new { page, search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayItemSliceAndTotal = true })
+            <div class="pagination">
+                @if (Model != null)
+                {
+                    @Html.Raw(Ajax.Pager(
+                            new Options
+                            {
+                                PageSize = Model.PageSize,
+                                TotalItemCount = Model.TotalItemCount,
+                                CurrentPage = Model.PageNumber,
+                                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Prev" },
+                                //ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                                TooltipTitles = new TooltipTitles() { Next = "Next page", Previous = "Previous page", Page = "Page {0}." },
+                                Size = Size.normal,
+                                Alignment = Alignment.centered,
+                                IsShowControls = true,
+                                IsShowFirstLast = false,
+                                CssClass = ""
+                            },
+                            new AjaxOptions
+                            {
+                                UpdateTargetId = "productsshop",
+                                OnBegin = "beginPaging",
+                                OnSuccess = "successPaging",
+                                OnFailure = "failurePaging"
+                            }, new
+                            {
+                                controller = "Home",
+                                action = "Shop",
+                                Category = ViewData["Category"],
+                                ProductName = ViewData["ProductName"],
+                                Price = ViewData["Price"],
+                                Quantity = ViewData["Quantity"],
+                                ActiveFlag = ViewData["ActiveFlag"]
+                            }))
+                }
             </div>
+            @*<div class="container">
+                    @Html.PagedListPager(Model.ListOfProducts, page => Url.Action("Index", new { page, search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayItemSliceAndTotal = true })
+                </div>*@
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="container">
-                        @Html.PagedListPager(Model.ListOfProducts, page => Url.Action("Shop", new { page, search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayItemSliceAndTotal = true })
+
+        @*<div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="container">
+                            @Html.PagedListPager(Model.ListOfProducts, page => Url.Action("Shop", new { page, search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayItemSliceAndTotal = true })
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>*@
     </section>
 
     <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -131,33 +258,80 @@
 </div>
 @section scripts{
     <script>
-        $(document).ready(function () {
-            $("form").submit(function (event) {
-                // Prevent the default form submission behavior
-                event.preventDefault();
+        function decreaseQuantity(element) {
+            var quantityElement = element.parentNode.nextElementSibling;
+            var quantity = parseInt(quantityElement.textContent);
+            if (quantity > 1) {
+                quantityElement.textContent = quantity - 1;
+            }
+        }
 
-                // Serialize the form data
-                var formData = $(this).serialize();
+        function increaseQuantity(element) {
+            var quantityElement = element.parentNode.previousElementSibling;
+            var currentQuantity = parseInt(quantityElement.textContent);
+            var maxQuantity = parseInt(quantityElement.dataset.maxQuantity);
+            //var maxQuantity = parseInt($("#orgquantity").val());
 
-                // Send the form data to the server using AJAX
-                $.ajax({
-                    url: $(this).attr("action"),  // Get the form's action URL
-                    type: $(this).attr("method"), // Get the form's method (POST)
-                    data: formData,               // Use the serialized form data
-                    success: function (response) {
-                        // Handle the success response from the server
-                        console.log("Item added to cart successfully!");
-                       /* alert("Your item is successfully added to the cart!");*/
-                        $("#cartModal").modal("show");
-                        // Optionally, you can update the page or perform other actions
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle errors
-                        console.error("Error adding item to cart:", error);
-                    }
-                });
+            console.log("Quantity element:", quantityElement);
+            console.log("Current quantity:", currentQuantity);
+            console.log("Original quantity:", maxQuantity);
+
+            if (isNaN(maxQuantity)) {
+                console.error("Original quantity is not a number.");
+                return;
+            }
+
+            if (currentQuantity < maxQuantity) {
+                quantityElement.textContent = currentQuantity + 1;
+            } else {
+                alert("Cannot increase quantity beyond maximum.");
+            }
+        }
+
+        function addToCart(productId, url, quantityElement) {
+            var quantity = parseInt($(quantityElement).closest('.detail-box').find('.quantity').text().trim(), 10);
+
+            console.log("Quantity:", quantity);
+            // Construct the data object
+            var data = {
+                productId: productId,
+                quantity: quantity,
+                url: url
+            };
+            console.log("data:", data);
+            // Send the data to the server using AJAX
+            $.ajax({
+                url: "/Home/AddToCart",  // URL of the controller action
+                type: "POST", // Use POST method
+                contentType: "application/json", // Set content type to JSON
+                data: JSON.stringify(data),
+                success: function (response) {
+                    // Handle the success response from the server
+                    console.log("Item added to cart successfully!");
+                    $("#cartModal").modal("show");
+                    // Optionally, you can update the page or perform other actions
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
+                    console.error("Error adding item to cart:", error);
+                }
             });
+        }
+
+
+        function clearSearch() {
+            // Reset the values of search fields
+            document.getElementsByName('productname')[0].value = '';
+            document.getElementsByName('category')[0].value = '';
+            document.getElementsByName('price')[0].value = '';
+            document.getElementsByName('quantity')[0].value = '';
+            document.getElementsByName('ActiveFlag')[0].value = '';
+
+            console.log('Clear search function called');
+        }
+        $(document).ready(function () {
+            $('div.pagination ul').addClass('pagination');
         });
 
     </script>
-    }
+}

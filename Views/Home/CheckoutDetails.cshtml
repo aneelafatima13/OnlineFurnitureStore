@@ -8,7 +8,7 @@
 <div class="sub_page">
     <section class="contact_section layout_padding">
         <div class="container">
-            <button class="dropdown-button">Add Shipping Details</button>
+            <button class="dropdown-button shippingbtn" onclick="toggleShippingDetails()">Add Shipping Details</button>
             <br />
             <div id="showshippingdetails" style="padding:30px"></div>
             @using (Html.BeginForm("CheckoutDetails", "Home", FormMethod.Post, new { id = "checkoutForm" }))
@@ -16,7 +16,7 @@
                 <div id="shippingdetails" style="padding:20px">
                     @{ Html.RenderPartial("_ShippingDetails"); }
                 </div>
-                <button class="dropdown-button" onclick="submitForm()">Confirm Details</button>
+                <button class="dropdown-button confirmbtn" onclick="submitForm()">Confirm Details</button>
             }
             <br />
             <div id="conformdetails" style="padding:30px"></div>
@@ -46,6 +46,7 @@
                         var shippingId = response.ShippingId;
                         loadConfirmDetails(memberId, shippingId);
                         loadShowShippingDetails(memberId, shippingId);
+                        toggleshowshippingdetails();
                     },
                     error: function (xhr, status, error) {
                         // Handle the error response
@@ -86,12 +87,14 @@
     function sendDataToServer() {
         var cartItems = [];
 
-        $(".productId").each(function () {
-            var productId = $(this).val();
-            quantity = $(this).closest("tr").find("#cartProductQuantity").text();
-            total = $(this).closest("tr").find("#cartProductTotal").text();
-
-            // Create a cart item object
+        $(".cartItems").each(function () {
+            //var productId = $(this).val();
+            var productId = $(this).find(".productId").val();
+            var quantity = parseInt($(this).find(".quantity").text()); // Extract quantity as text and parse to integer
+            var total = parseInt($(this).find(".total").text());
+           //var quantity = $(this).find("#cartProductQuantity").val();
+           // var total = $(this).find("#cartProductTotal").val();
+           
             var cartItem = {
                 ProductId: productId,
                 MemberId: $("#MemberId").val(),
@@ -145,11 +148,56 @@
                     console.error('Error:', error);
                 }
             });
+    }
+
+    function toggleShippingDetails() {
+        var shippingDetailsDiv = document.getElementById("shippingdetails");
+        var showShippingDetailsDiv = document.getElementById("showshippingdetails");
+        if (shippingDetailsDiv.style.display === "none") {
+            shippingDetailsDiv.style.display = "block";
+            showShippingDetailsDiv.style.display = "none";
+            $("#shippingdetails").slideToggle(100); // Toggle shipping details with animation
+            $("#shippingdetails").toggle();
+        } else {
+            shippingDetailsDiv.style.display = "none";
+            showShippingDetailsDiv.style.display = "block";
+            $("#showshippingdetails").slideToggle(1000); // Toggle shipping details with animation
+            $("#showshippingdetails").toggle();
         }
+    }
+
+    function toggleConfirmDetails() {
+        var confirmDetailsDiv = document.getElementById("conformdetails");
+        if (confirmDetailsDiv.style.display === "none") {
+            confirmDetailsDiv.style.display = "block";
+            confirmDetailsDiv.classList.add("animate-show");
+        } else {
+            confirmDetailsDiv.classList.remove("animate-show");
+            setTimeout(function () {
+                confirmDetailsDiv.style.display = "none";
+            }, 1000); // 1000 milliseconds = 1 second
+        }
+    }
+    function toggleshippingdetails() {
+        $(".shippingbtn").click(function () {
+            $("#shippingdetails").slideToggle(1000); // Toggle shipping details with animation
+            $("#shippingdetails").toggle(); // Toggle visibility of the placeholder div
+        });
+    }
+    function toggleshowshippingdetails() {
+        $(".shippingbtn").click(function () {
+            $("#showshippingdetails").slideToggle(1000); // Toggle shipping details with animation
+            $("#showshippingdetails").toggle(); // Toggle visibility of the placeholder div
+        });
+    }
         // Initial check on page load
         $(document).ready(function () {
             handlePaymentTypeChange();
+            //toggleshippingdetails();
 
+            //$(".confirmbtn").click(function () {
+            //    $("#conformdetails").slideToggle(1000); // Toggle confirm details with animation
+            //});
         });
 </script>
 
