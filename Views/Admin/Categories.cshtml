@@ -10,7 +10,7 @@
 
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Categories</h1>
-    
+
     <!-- DataTales Example -->
     <div class="card shadow mb-3">
         <div class="card-header py-3">
@@ -21,7 +21,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="categorydataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Sr.No</th>
@@ -53,3 +53,55 @@
 
 </div>
 <!-- /.container-fluid -->
+<!-- Normal -->
+<link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<!-- jQuery ThemeRoller -->
+@*<link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.jqueryui.min.css" rel="stylesheet" />*@
+
+<!-- Semantic UI -->
+@*<link href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.semanticui.min.css" rel="stylesheet" />*@
+
+<!-- Bootstrap 4 -->
+@*<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap4.min.css" rel="stylesheet" />*@
+
+@section scripts{
+    @* Normal *@
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+
+
+    @* jQuery ThemeRoller*@
+    @*<script src="https://cdn.datatables.net/1.10.15/js/dataTables.jqueryui.min.js"></script>*@
+
+    @* Semantic UI*@
+    @*<script src="https://cdn.datatables.net/1.10.15/js/dataTables.semanticui.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.js"></script>*@
+
+    @* Bootstrap 4*@
+    @*<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet" />
+        <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js"></script>*@
+
+    @*<script>
+        $(document).ready(function () {
+
+            $("#categorydataTable").DataTable(
+                {
+                    "ajax": {
+                        "url": "/Admin/GetList",
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "CategoryName" },
+                       
+                    ]
+
+                });
+
+        });
+
+    </script>*@
+
+}

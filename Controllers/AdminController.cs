@@ -10,7 +10,7 @@ namespace OnlineFurnitureStore.Controllers
 {
     public class AdminController : Controller
     {
-
+        private OnlineFurnitureStoreEntities db = new OnlineFurnitureStoreEntities();
         public GenericUnitOfWork _unitofwork = new GenericUnitOfWork();
 
         public List<SelectListItem> GetCategory()
@@ -38,8 +38,16 @@ namespace OnlineFurnitureStore.Controllers
         {
             List<Tbl_Category> allcategories = _unitofwork.GetRepositoryInstance<Tbl_Category>().GetAllRecordsIQueryable().Where(i => i.IsDelete == false).ToList();
             return View(allcategories);
+            //return View();
         }
+        public ActionResult GetList()
+        {
 
+            var allcategories = db.Tbl_Category.ToList<Tbl_Category>();
+            return Json(new { data = allcategories }, JsonRequestBehavior.AllowGet);
+            
+
+        }
         public ActionResult AddCategories()
         {
             return View();
@@ -113,69 +121,6 @@ namespace OnlineFurnitureStore.Controllers
             return RedirectToAction("Products");
         }
 
-        public ActionResult Error()
-        {
-            return View();
-        }
-
-        public ActionResult Blank()
-        {
-            return View();
-        }
-
-        public ActionResult Buttons()
-        {
-            return View();
-        }
-
-        public ActionResult Cards()
-        {
-            return View();
-        }
-
-        public ActionResult Charts()
-        {
-            return View();
-        }
-
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        public ActionResult Tables()
-        {
-            return View();
-        }
-
-        public ActionResult Animation()
-        {
-            return View();
-        }
-
-        public ActionResult Color()
-        {
-            return View();
-        }
-
-        public ActionResult Border()
-        {
-            return View();
-        }
-
-        public ActionResult Other()
-        {
-            return View();
-        }
+        
     }
 }
