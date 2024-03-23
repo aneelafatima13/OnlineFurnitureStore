@@ -11,7 +11,8 @@ namespace OnlineFurnitureStore.DAL
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Tbl_ShippingDetails
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,10 +23,21 @@ namespace OnlineFurnitureStore.DAL
     
         public int ShippingDetailId { get; set; }
         public Nullable<int> MemberId { get; set; }
+
+        [Required(ErrorMessage = "Address is required")]
         public string Adress { get; set; }
+
+        [Required(ErrorMessage = "City is required")]
         public string City { get; set; }
+
+        [Required(ErrorMessage = "State is required")]
         public string State { get; set; }
+
+        [Required(ErrorMessage = "Country is required")]
         public string Country { get; set; }
+
+        [Required(ErrorMessage = "Zip Code is required")]
+        [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid Zip Code")]
         public string ZipCode { get; set; }
         public Nullable<System.DateTime> ShippingDate { get; set; }
         public Nullable<decimal> AmountPaid { get; set; }

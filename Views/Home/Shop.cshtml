@@ -167,9 +167,6 @@
                                     using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Shop", id = "addtocartform" }, FormMethod.Post))
                                     {
                                         <button type="button" class="btn btn-success clrchange" onclick="addToCart(@item.ProductId, 'Shop', this)">Add to Cart</button>
-
-
-
                                     }
                                 }
                                 else

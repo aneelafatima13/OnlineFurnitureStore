@@ -1895,6 +1895,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Admin2Controller.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\OnlineShoppingStore.Context.cs">
@@ -2179,6 +2180,9 @@
     <Content Include="Views\Home\_ConfirmDetails.cshtml" />
     <Content Include="Views\Home\_ShowShippingDetails.cshtml" />
     <Content Include="Views\Home\_Member.cshtml" />
+    <Content Include="Views\Admin2\MembersList.cshtml" />
+    <Content Include="Views\Admin2\MembershipMembersList.cshtml" />
+    <Content Include="Views\Admin2\NonMembershipMembersList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

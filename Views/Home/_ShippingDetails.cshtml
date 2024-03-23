@@ -1,8 +1,5 @@
 ﻿@model OnlineFurnitureStore.DAL.Tbl_ShippingDetails
-@*<div class="container">
-    <br />
-    @using (Html.BeginForm("CheckoutDetails", "Home", FormMethod.Post, new { id = "checkoutForm" }))
-    {*@
+
         <div class="row">
             <div class="col-lg-4">
                 <div>
@@ -15,6 +12,7 @@
                 <div>
                     <label>Address:</label>
                     @Html.TextBoxFor(model => model.Adress, new { placeholder = "Enter your Address", @rows = "3", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Adress, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -23,24 +21,28 @@
                 <div>
                     <label>Country name:</label>
                     @Html.TextBoxFor(model => model.Country)
+                    @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="col-lg-3">
                 <div>
                     <label>State Name:</label>
                     @Html.TextBoxFor(model => model.State)
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="col-lg-3">
                 <div>
                     <label>City Name:</label>
                     @Html.TextBoxFor(model => model.City)
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="col-lg-3">
                 <div>
                     <label>Zip Code:</label>
                     @Html.TextBoxFor(model => model.ZipCode)
+                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -102,12 +104,5 @@
             </div>
         </div>
 
-        @*<div class="d-flex ">
-
-            <button class="dropdown-button" onclick="submitForm()">Confirm Details</button>
-
-
-        </div>
-    }*@
-@*</div>*@
+      
                                  

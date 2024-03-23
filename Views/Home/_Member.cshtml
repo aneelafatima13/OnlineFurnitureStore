@@ -5,16 +5,22 @@
     <div class="col-md-4">
         <div>
             @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name" })
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            <span class="error-msg" id="firstNameError"></span>
         </div>
     </div>
     <div class="col-md-4">
         <div>
             @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
+            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            <span class="error-msg" id="lastNameError"></span>
         </div>
     </div>
     <div class="col-md-4">
         <div>
             @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email" })
+            @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "text-danger" })
+            <span class="error-msg" id="emailError"></span>
         </div>
     </div>
 </div>

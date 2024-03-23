@@ -29,39 +29,49 @@ namespace OnlineFurnitureStore.Controllers
         }
         public ActionResult AddToCart(int productId, int quantity, string url)
         {
-            if (Session["cart"] == null)
+            try
             {
-                List<Item> cart = new List<Item>();
-                var product = ctx.Tbl_Product.Find(productId);
-                cart.Add(new Item()
+                if (Session["cart"] == null)
                 {
-                    Product = product,
-                    Quantity = quantity // Use the provided quantity parameter
-                });
-                Session["cart"] = cart;
-            }
-            else
-            {
-                List<Item> cart = (List<Item>)Session["cart"];
-                var existingItem = cart.FirstOrDefault(item => item.Product.ProductId == productId);
-
-                if (existingItem != null)
-                {
-                    // If the product already exists in the cart, update its quantity
-                    existingItem.Quantity += quantity;
-                }
-                else
-                {
+                    List<Item> cart = new List<Item>();
                     var product = ctx.Tbl_Product.Find(productId);
                     cart.Add(new Item()
                     {
                         Product = product,
                         Quantity = quantity // Use the provided quantity parameter
                     });
+                    Session["cart"] = cart;
                 }
-                Session["cart"] = cart;
+                else
+                {
+                    List<Item> cart = (List<Item>)Session["cart"];
+                    var existingItem = cart.FirstOrDefault(item => item.Product.ProductId == productId);
+
+                    if (existingItem != null)
+                    {
+                        // If the product already exists in the cart, update its quantity
+                        existingItem.Quantity += quantity;
+                    }
+                    else
+                    {
+                        var product = ctx.Tbl_Product.Find(productId);
+                        cart.Add(new Item()
+                        {
+                            Product = product,
+                            Quantity = quantity // Use the provided quantity parameter
+                        });
+                    }
+                    Session["cart"] = cart;
+                }
+
+                // Return JSON indicating success
+                return Json(new { success = true, message = "Item added to cart successfully!" });
             }
-            return Redirect(url);
+            catch (Exception ex)
+            {
+                // Return JSON indicating failure with error message
+                return Json(new { success = false, message = "Error adding item to cart: " + ex.Message });
+            }
         }
 
         //public ActionResult AddToCart(int productId, int quantity, string url)
@@ -330,45 +340,82 @@ namespace OnlineFurnitureStore.Controllers
 
 
         [HttpPost]
-        public ActionResult Membership(Tbl_Members member)
+        public ActionResult Membership(Tbl_Members member, string url)
         {
             try
             {
-                // Set IsActive to true for all records
-                member.IsActive = true;
-                member.CreateOn = DateTime.Now;
+                if (ModelState.IsValid)
+                {
+                    // Server-side validation for ConfirmPassword
+                    if (member.Password != member.ConfirmPassword)
+                    {
+                        ModelState.AddModelError("ConfirmPassword", "Passwords do not match");
+                        return View(); // Return the view with validation errors
+                    }
 
-                ctx.Tbl_Members.Add(member);
-                ctx.SaveChanges();
+                    // Set IsActive to true for all records
+                    member.IsActive = true;
+                    member.CreateOn = DateTime.Now;
 
-                Session["MemberId"] = member.MemberId;
+                    ctx.Tbl_Members.Add(member);
+                    ctx.SaveChanges();
 
-                // Redirect to AttendanceSheet with the employee's ID
-                return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                    Session["MemberId"] = member.MemberId;
+
+                    // Redirect to appropriate action based on 'url'
+                    //if (url == "CheckoutDetails")
+                    //{
+                    //    return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                    //}
+                    //else
+                    if (url == "AllShippingDetails")
+                    {
+                        return Json(new { MemberId = member.MemberId });
+                    }
+                    else
+                    {
+                        return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                        //ViewBag.ErrorMessage = "Invalid redirection URL";
+                        //return View("Error"); // Handle unknown URL
+                    }
+                }
+                else
+                {
+                    //if (url == "CheckoutDetails")
+                    //{
+                    //    return View(member);
+                    //    //return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                    //}
+                    //else 
+                    if (url == "AllShippingDetails")
+                    {
+                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                        return Json(new { Errors = errors });
+                        //return Json(new { MemberId = member.MemberId });
+                    }
+                    else
+                    {
+                        return View(member);
+                        //ViewBag.ErrorMessage = "Invalid redirection URL";
+                        //return View("Error"); // Handle unknown URL
+                    }
+                    // Model is invalid, return the view with validation errors
+                    //return View(member);
+                }
             }
             catch (DbUpdateException ex)
             {
-                // Inspect the inner exception for more details
-                var innerException = ex.InnerException;
-
-                while (innerException != null)
-                {
-                    // Log or handle the specific details of the inner exception
-                    // You may want to log the exception details for debugging purposes
-                    innerException = innerException.InnerException;
-                }
-
+                // Handle database update exception
                 ViewBag.ErrorMessage = "An error occurred while updating the entries. See the inner exception for details.";
-                return View("Error"); // You can create an Error view to display the error message
+                return View("Error");
             }
             catch (Exception ex)
             {
                 // Handle other exceptions
                 ViewBag.ErrorMessage = "An error occurred while adding the member.";
-                return View("Error"); // You can create an Error view to display the error message
+                return View("Error");
             }
         }
-
 
         public ActionResult CheckoutDetails()
         {
@@ -530,28 +577,39 @@ namespace OnlineFurnitureStore.Controllers
         {
             try
             {
-                // Retrieve the MemberId from the form
-                int memberId = Convert.ToInt32(Request.Form["MemberId"]);
-
-                // Set the MemberId for the shippingDetails
-                shippingDetails.MemberId = memberId;
-                shippingDetails.ShippingDate = DateTime.Now;
-                // Save the shipping details to the database
-                ctx.Tbl_ShippingDetails.Add(shippingDetails);
-                ctx.SaveChanges();
-
-                Session["MemberId"] = shippingDetails.MemberId;
-                Session["ShippingId"] = shippingDetails.ShippingDetailId;
-
-                // Prepare the data you want to return
-                var data = new
+                // Check if the model state is valid
+                if (ModelState.IsValid)
                 {
-                    MemberId = shippingDetails.MemberId,
-                    ShippingId = shippingDetails.ShippingDetailId
-                };
+                    // Retrieve the MemberId from the form
+                    int memberId = Convert.ToInt32(Request.Form["MemberId"]);
 
-                // Return a JSON result with the data
-                return Json(data);
+                    // Set the MemberId for the shippingDetails
+                    shippingDetails.MemberId = memberId;
+                    shippingDetails.ShippingDate = DateTime.Now;
+
+                    // Save the shipping details to the database
+                    ctx.Tbl_ShippingDetails.Add(shippingDetails);
+                    ctx.SaveChanges();
+
+                    Session["MemberId"] = shippingDetails.MemberId;
+                    Session["ShippingId"] = shippingDetails.ShippingDetailId;
+
+                    // Prepare the data you want to return
+                    var data = new
+                    {
+                        MemberId = shippingDetails.MemberId,
+                        ShippingId = shippingDetails.ShippingDetailId
+                    };
+
+                    // Return a JSON result with the data
+                    return Json(data);
+                }
+                else
+                {
+                    // If model state is not valid, return validation errors
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                    return Json(new { Errors = errors });
+                }
             }
             catch (Exception ex)
             {

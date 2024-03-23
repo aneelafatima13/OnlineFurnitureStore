@@ -1,9 +1,19 @@
 body {
-  font-family: 'Open Sans', sans-serif;
-  color: #0c0c0c;
-  background-color: #ffffff;
+    font-family: 'Open Sans', sans-serif;
+    color: #0c0c0c;
+    background-color: #ffffff;
+    overflow-x: hidden;
 }
 
+.error-msg {
+    color: red; /* Change text color to red */
+    font-size: 12px; /* Set font size */
+    margin-top: 5px; /* Add some space between input and error message */
+}
+
+.error {
+    border: 1px solid red; /* Add red border to invalid fields */
+}
 /*.grid-container {
     display: grid;
     grid-template-columns: repeat(10, 1fr);

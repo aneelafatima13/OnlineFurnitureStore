@@ -20,27 +20,36 @@
             <div class="row">
 
                 <div class="col-md-6">
-                    @using (Html.BeginForm("Membership", "Home", FormMethod.Post, new { id = "membershipform" }))
+                    @using (Html.BeginForm("Membership", "Home", null, FormMethod.Post, new { id = "membershipform"@*, url = "CheckoutDetails"*@ }))
                     {
                         <div class="mform">
-                            @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name" })
+                            @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name", @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            <span class="error-msg" id="firstNameError"></span>
                         </div>
                         <div class="mform">
-                            @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
+                            @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name", @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                            <span class="error-msg" id="lastNameError"></span>
                         </div>
                         <div class="mform">
-                            @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email" })
+                            @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email", @class = "form-control", required = "required", type = "email" })
+                            @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "text-danger" })
+                            <span class="error-msg" id="emailError"></span>
                         </div>
                         <div class="mform">
-                            @Html.PasswordFor(model => model.Password, new { placeholder = "Password", id = "password-input" })
+                            @Html.PasswordFor(model => model.Password, new { placeholder = "Password", id = "password-input", @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            <span class="error-msg" id="passwordError"></span>
                         </div>
                         <div class="mform">
-                            <input type="password" id="confirmPassword" name="confirmPassword" @*class="form-control"*@ value="@Model.Password" placeholder="Confirm it">
+                            @Html.PasswordFor(model => model.ConfirmPassword, new { placeholder = "Confirm Password", id = "confirmpassword-input", @class = "form-control", required = "required" })
+                            @*<input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required="required" placeholder="Confirm Password">*@
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                            <span class="error-msg" id="confirmPasswordError"></span>
                         </div>
-                        <div class="d-flex ">
-                            <button>
-                                Checkout Details
-                            </button>
+                        <div class="d-flex">
+                            <button type="submit">Checkout Details</button>
                         </div>
                     }
                 </div>
@@ -54,45 +63,43 @@
     <!-- end contact section -->
 </div>
 @section scripts{
+    <!-- jQuery Validation plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
 
     <script>
+        //memberformvalidation(){
 
-        $.validator.addMethod("ValidNumber", function (value, element) {
-            // Define your password criteria here
-            return /^03\d{9}$/.test(value);
-        }, "Your Phone number muust start with 03 and total 11 digits");
+        //}
+        $.validator.addMethod("strongPassword", function (value, element) {
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,}/.test(value);
+        }, "Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.");
 
-        jQuery.validator.addMethod("confirmPassword", function (value, element, param) {
+        $.validator.addMethod("confirmPassword", function (value, element, param) {
             return this.optional(element) || value === $(param).val();
         }, "Passwords do not match.");
 
-        jQuery.validator.addMethod("strongPassword", function (value, element) {
-            // Define your password criteria here
-            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,}/.test(value);
-        }, "Your password must contain at least one lowercase letter, one uppercase letter and one digit and be at least 4 characters long.");
+        // Initialize form validation
         $('#membershipform').validate({
-            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
-            errorElement: 'div',
-            errorPlacement: function (error, e) {
-                e.parents('.mform > div').append(error);
+            errorClass: 'error-msg',
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
             },
-            highlight: function (e) {
-                $(e).closest('.mform').addClass('has-error');
-               /* $(e).closest('.help-block').remove();*/
+            highlight: function (element) {
+                $(element).addClass('error');
             },
-            success: function (e) {
-                // You can use the following if you would like to highlight with green color the input after successful validation!
-                e.closest('.mform').addClass('has-success'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
-                /*e.closest('.help-block').remove();*/
+            unhighlight: function (element) {
+                $(element).removeClass('error');
             },
             rules: {
                 FirstName: {
-                    required: true  
+                    required: true
                 },
                 LastName: {
-                    required: true  
+                    required: true
                 },
-                Email: {
+                EmailId: {
                     required: true,
                     email: true
                 },
@@ -102,48 +109,118 @@
                 },
                 confirmPassword: {
                     required: true,
-                    equalTo: "#password-input" // reference to the password field
-                },
-                PhoneNo: {
-                    required: true,
-                    ValidNumber: true
+                    confirmPassword: "#password-input"
                 }
             },
             messages: {
-                
                 FirstName: {
-                    required: 'Please enter a username',
-                    minlength: 'Your username must consist of at least 3 characters'
+                    required: "Please enter your first name."
                 },
                 LastName: {
-                    required: 'Please enter a username',
-                    minlength: 'Your username must consist of at least 3 characters'
+                    required: "Please enter your last name."
                 },
-                Email: 'Please enter a valid email address',
+                EmailId: {
+                    required: "Please enter your email address.",
+                    email: "Please enter a valid email address."
+                },
                 Password: {
-                    required: 'Please provide a password',
-                    strongPassword: 'Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.'
-
+                    required: "Please enter a password."
                 },
                 confirmPassword: {
-                    required: 'Please enter password.',
-                    equalTo: 'Please enter the same password as above',
-                    strongPassword: 'Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.'
-
-                },
-                PhoneNo: {
-                    required: 'Please enter a Phone No',
-                    ValidNumber: 'Your Phone number muust start with 03 and total 11 digits'
+                    required: "Please confirm your password.",
+                    confirmPassword: "Passwords do not match."
                 }
-                
+            },
+            submitHandler: function (form) {
+                form.submit();
             }
         });
 
-        $('#membershipform').submit(function () {
-            if ($(this.valid())) {
-                $('#membershipform').submit();
-            }
-        });
+            //$.validator.addMethod("ValidNumber", function (value, element) {
+            //    // Define your password criteria here
+            //    return /^03\d{9}$/.test(value);
+            //}, "Your Phone number muust start with 03 and total 11 digits");
+
+            //jQuery.validator.addMethod("confirmPassword", function (value, element, param) {
+            //    return this.optional(element) || value === $(param).val();
+            //}, "Passwords do not match.");
+
+            //jQuery.validator.addMethod("strongPassword", function (value, element) {
+            //    // Define your password criteria here
+            //    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,}/.test(value);
+            //}, "Your password must contain at least one lowercase letter, one uppercase letter and one digit and be at least 4 characters long.");
+
+            //$('#membershipform').validate({
+            //    errorClass: 'error-msg',
+            //    errorElement: 'span',
+            //    errorPlacement: function (error, element) {
+            //        error.insertAfter(element);
+            //    },
+            //    highlight: function (element) {
+            //        $(element).addClass('error');
+            //    },
+            //    unhighlight: function (element) {
+            //        $(element).removeClass('error');
+            //    },
+            //    rules: {
+            //        FirstName: {
+            //            required: true
+            //        },
+            //        LastName: {
+            //            required: true
+            //        },
+            //        Email: {
+            //            required: true,
+            //            email: true
+            //        },
+            //        Password: {
+            //            required: true,
+            //            strongPassword: true
+            //        },
+            //        confirmPassword: {
+            //            required: true,
+            //            equalTo: "#password-input" // reference to the password field
+            //        },
+            //        PhoneNo: {
+            //            required: true,
+            //            ValidNumber: true
+            //        }
+            //    },
+            //    messages: {
+
+            //        FirstName: {
+            //            required: 'Please enter a username',
+            //            minlength: 'Your username must consist of at least 3 characters'
+            //        },
+            //        LastName: {
+            //            required: 'Please enter a username',
+            //            minlength: 'Your username must consist of at least 3 characters'
+            //        },
+            //        Email: 'Please enter a valid email address',
+            //        Password: {
+            //            required: 'Please provide a password',
+            //            strongPassword: 'Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.'
+
+            //        },
+            //        confirmPassword: {
+            //            required: 'Please enter password.',
+            //            equalTo: 'Please enter the same password as above',
+            //            strongPassword: 'Your password must contain at least one lowercase letter, one uppercase letter, one digit and be at least 4 characters long.'
+
+            //        },
+            //        PhoneNo: {
+            //            required: 'Please enter a Phone No',
+            //            ValidNumber: 'Your Phone number muust start with 03 and total 11 digits'
+            //        }
+
+            //    }
+            //});
+
+            //$('#membershipform').submit(function () {
+            //    if ($(this.valid())) {
+            //        $('#membershipform').submit();
+            //    }
+            //});
     </script>
-    
-    }
+
+}
