@@ -344,8 +344,8 @@ namespace OnlineFurnitureStore.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                //if (ModelState.IsValid)
+                //{
                     // Server-side validation for ConfirmPassword
                     if (member.Password != member.ConfirmPassword)
                     {
@@ -378,30 +378,30 @@ namespace OnlineFurnitureStore.Controllers
                         //ViewBag.ErrorMessage = "Invalid redirection URL";
                         //return View("Error"); // Handle unknown URL
                     }
-                }
-                else
-                {
-                    //if (url == "CheckoutDetails")
-                    //{
-                    //    return View(member);
-                    //    //return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
-                    //}
-                    //else 
-                    if (url == "AllShippingDetails")
-                    {
-                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                        return Json(new { Errors = errors });
-                        //return Json(new { MemberId = member.MemberId });
-                    }
-                    else
-                    {
-                        return View(member);
-                        //ViewBag.ErrorMessage = "Invalid redirection URL";
-                        //return View("Error"); // Handle unknown URL
-                    }
-                    // Model is invalid, return the view with validation errors
-                    //return View(member);
-                }
+                //}
+                //else
+                //{
+                //    //if (url == "CheckoutDetails")
+                //    //{
+                //    //    return View(member);
+                //    //    //return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                //    //}
+                //    //else 
+                //    if (url == "AllShippingDetails")
+                //    {
+                //        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                //        return Json(new { Errors = errors });
+                //        //return Json(new { MemberId = member.MemberId });
+                //    }
+                //    else
+                //    {
+                //        return View(member);
+                //        //ViewBag.ErrorMessage = "Invalid redirection URL";
+                //        //return View("Error"); // Handle unknown URL
+                //    }
+                //    // Model is invalid, return the view with validation errors
+                //    //return View(member);
+                //}
             }
             catch (DbUpdateException ex)
             {
@@ -578,8 +578,8 @@ namespace OnlineFurnitureStore.Controllers
             try
             {
                 // Check if the model state is valid
-                if (ModelState.IsValid)
-                {
+                //if (ModelState.IsValid)
+                //{
                     // Retrieve the MemberId from the form
                     int memberId = Convert.ToInt32(Request.Form["MemberId"]);
 
@@ -603,13 +603,13 @@ namespace OnlineFurnitureStore.Controllers
 
                     // Return a JSON result with the data
                     return Json(data);
-                }
-                else
-                {
-                    // If model state is not valid, return validation errors
-                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                    return Json(new { Errors = errors });
-                }
+                //}
+                //else
+                //{
+                //    // If model state is not valid, return validation errors
+                //    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                //    return Json(new { Errors = errors });
+                //}
             }
             catch (Exception ex)
             {
@@ -686,6 +686,12 @@ namespace OnlineFurnitureStore.Controllers
                 // Validate if cartItems is not null and has items
                 if (cartItems != null && cartItems.Count > 0)
                 {
+                    //var cartStatus = ctx.Tbl_CartStatus.FirstOrDefault(c => c.CartStatusId == 1);
+
+                    //if (cartStatus == null)
+                    //{
+                    //    return Json(new { success = false, message = "Cart status with ID 1 not found" });
+                    //}
                     // Process and save each received cart item to the database
                     foreach (var cartItem in cartItems)
                     {

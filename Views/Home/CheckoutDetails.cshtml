@@ -83,54 +83,52 @@
                 $('#cashOnDeliveryDetails').hide();
                 $('#debitCardDetails').show();
             }
-        }
-    function sendDataToServer() {
-        var cartItems = [];
+    }
 
-        $(".cartItems").each(function () {
-            //var productId = $(this).val();
-            var productId = $(this).find(".productId").val();
-            var quantity = parseInt($(this).find(".quantity").text()); // Extract quantity as text and parse to integer
-            var total = parseInt($(this).find(".total").text());
-           //var quantity = $(this).find("#cartProductQuantity").val();
-           // var total = $(this).find("#cartProductTotal").val();
-           
-            var cartItem = {
+   function sendDataToServer() {
+    var cartItems = [];
+
+    // Loop through each row in the table body
+    $('.cartData').each(function () {
+        var productId = $(this).find('.productId').val();
+        var quantity = parseInt($(this).find('.quantity').text().trim());
+        var total = parseInt($(this).find('.total').text().trim());
+
+        console.log('productId:', productId);
+        console.log('quantity:', quantity);
+        console.log('total:', total);
+
+        // Check if the data is valid
+        if (!isNaN(productId) && !isNaN(quantity) && !isNaN(total)) {
+            cartItems.push({
                 ProductId: productId,
-                MemberId: $("#MemberId").val(),
                 CartProductQuantity: quantity,
                 CartProductTotalPrice: total,
+                MemberId: $("#MemberId").val(),
                 ShippingId: $("#ShippingDetailId").val()
-            };
+            });
+        }
+    });
 
-            // Push the cart item to the array
-            cartItems.push(cartItem);
-        });
+    console.log('cart Items:', cartItems);
 
+    // Send data to the controller using AJAX
+    $.ajax({
+        url: '@Url.Action("SaveCartItems", "Home")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ cartItems: cartItems }),
+        success: function (response) {
+            // Handle success response
+            console.log('Data sent successfully');
+        },
+        error: function (xhr, status, error) {
+            // Handle error response
+            console.error('Error:', error);
+        }
+    });
+}
 
-        // Prepare the data to be sent
-        var data = {
-            cartItems: cartItems
-        };
-
-        // Send the data to the server using AJAX
-        $.ajax({
-            type: "POST",
-            url: "/Home/SaveCartItems", // Replace with your actual controller and action
-            data: JSON.stringify(data),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                // Handle success
-                console.log("Data sent successfully");
-                $(".saveCart").prop("disabled", true);
-            },
-            error: function (error) {
-                // Handle error
-                console.log("Error sending data: " + error);
-            }
-        });
-    }
 
     function editShippingdetails() {
             // Make an AJAX call to the CheckoutDetails action

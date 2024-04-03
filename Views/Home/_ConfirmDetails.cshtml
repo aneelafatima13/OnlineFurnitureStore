@@ -40,13 +40,16 @@
                     Total = Convert.ToInt32(@Total + lineTotal);
 
                     Session["SesTotal"] = Total;
+                <tr class="cartData">
                     <input type="hidden" id="product-id" class="cartItems productId" name="ProductId" value="@item.Product.ProductId" />
-                    <tr>
-                        <td>@item.Product.ProductName</td>
-                        <td>@item.Product.Price</td>
-                        <td class="cartItems quantity" id="cartProductQuantity" data-quantity="@item.Quantity">@item.Quantity</td>
-                        <td class="cartItems total" id="cartProductTotal" data-total="@lineTotal">@lineTotal</td>
-                    </tr>
+
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Product.Price</td>
+                    @*<td class="quantity">@item.Quantity</td>
+        <td class="total">@lineTotal</td>*@
+                    <td class="cartItems quantity" id="cartProductQuantity" data-quantity="@item.Quantity">@item.Quantity</td>
+                    <td class="cartItems total" id="cartProductTotal" data-total="@lineTotal">@lineTotal</td>
+                </tr>
                 }
 
                 <tr>

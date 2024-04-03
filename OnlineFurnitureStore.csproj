@@ -1898,6 +1898,12 @@
     <Compile Include="Controllers\Admin2Controller.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DAL\GetBySearch_Result.cs">
+      <DependentUpon>OnlineShoppingStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GetShippingDetails_Result.cs">
+      <DependentUpon>OnlineShoppingStore.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\OnlineShoppingStore.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2183,6 +2189,15 @@
     <Content Include="Views\Admin2\MembersList.cshtml" />
     <Content Include="Views\Admin2\MembershipMembersList.cshtml" />
     <Content Include="Views\Admin2\NonMembershipMembersList.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReport.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReportbyProduct.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReportbyMembers.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReportbyCity.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReportbyCountry.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReportbyPaymentType.cshtml" />
+    <Content Include="Views\Admin2\DailySaleReportbyCartStatus.cshtml" />
+    <Content Include="Views\Admin2\RecentOrders.cshtml" />
+    <Content Include="Views\Admin2\PreviousMonthOrders.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

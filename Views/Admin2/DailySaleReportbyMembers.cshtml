@@ -1,0 +1,59 @@
+﻿@using OnlineFurnitureStore.DAL
+@model List<Tbl_Cart>
+
+@{
+    ViewBag.Title = "DailySaleReportbyMembers";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="container-fluid">
+
+    <div class="card shadow mb-3">
+        <div class="card-header py-3">
+            <h6 class="m-3 font-weight-bold text-primary">
+                <i class="fas fa-fw fa-table"></i><span>Sale Report by Members</span>
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Member Name</th>
+                            <th>Product Name</th>
+                            <th>Product Quantity</th>
+                            <th>Product Total Price</th>
+                            <th>Cart Date</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>Country</th>
+                            <th>Total Amount</th>
+                            <th>Payment Type</th>
+                            <!-- Add additional columns as needed -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cartProductDetail in Model)
+                        {
+                        <tr>
+
+                            <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
+                            <td>@cartProductDetail.Tbl_Product.ProductName</td>
+                            <td>@cartProductDetail.CartProductQuantity</td>
+                            <td>@cartProductDetail.CartProductTotalPrice</td>
+                            <td>@cartProductDetail.CartDate</td>
+                            <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
+                            <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
+                            <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
+                            <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
+                            <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
+                            <!-- Add additional columns as needed -->
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -113,59 +113,74 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">All Orders:</h6>
-                        <a class="collapse-item" href="../Admin/Color">latest Orders</a>
-                        <a class="collapse-item" href="../Admin/Border">Previous week Orders</a>
-                        <a class="collapse-item" href="../Admin/Animation">Previous month Orders</a>
-                        <a class="collapse-item" href="../Admin/Other">Last 2 months Orders</a>
+                        <a class="collapse-item" href="../Admin2/RecentOrders">latest Orders</a>
+                        <a class="collapse-item" href="../Admin2/PreviousMonthOrders">Previous month Orders</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Divider -->
-            <!--<hr class="sidebar-divider">-->
-
-            <!-- Heading -->
-            <!--<div class="sidebar-heading">
-                Addons
-            </div>-->
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            @*<li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                   aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports"
+                   aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Reports</span>
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseReports" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="../Admin/Login">Login</a>
-                        <a class="collapse-item" href="../Admin/Register">Register</a>
-                        <a class="collapse-item" href="../Admin/ForgotPassword">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="../Admin/Error">404 Page</a>
-                        <a class="collapse-item" href="../Admin/Blank">Blank Page</a>
+                        <h6 class="collapse-header">Sale Reports:</h6>
+                        <a class="collapse-item" href="../Admin2/DailySaleReport">by Total Revenue</a>
+                        <a class="collapse-item" href="../Admin2/DailySaleReportbyProduct">by Products</a>
+                        <a class="collapse-item" href="../Admin2/DailySaleReportbyMembers">by Member</a>
+                        <a class="collapse-item" href="../Admin2/DailySaleReportbyCity">by City</a>
+                        <a class="collapse-item" href="../Admin2/DailySaleReportbyCountry">by Country</a>
+                        <a class="collapse-item" href="../Admin2/DailySaleReportbyPaymentType">by Payment Type</a>
+                        <a class="collapse-item" href="../Admin2/DailySaleReportbyCartStatus">by Cart Status</a>
+                        @*<a class="collapse-item" href="../Admin2/ProductsSaleReport">Products Sale Report</a>*@
                     </div>
                 </div>
-            </li>*@
+            </li>
+            <!-- Divider -->
+            <!--<hr class="sidebar-divider">-->
+            <!-- Heading -->
+            <!--<div class="sidebar-heading">
+        Addons
+    </div>-->
+            <!-- Nav Item - Pages Collapse Menu -->
+            @*<li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+               aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Pages</span>
+            </a>
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Login Screens:</h6>
+                    <a class="collapse-item" href="../Admin/Login">Login</a>
+                    <a class="collapse-item" href="../Admin/Register">Register</a>
+                    <a class="collapse-item" href="../Admin/ForgotPassword">Forgot Password</a>
+                    <div class="collapse-divider"></div>
+                    <h6 class="collapse-header">Other Pages:</h6>
+                    <a class="collapse-item" href="../Admin/Error">404 Page</a>
+                    <a class="collapse-item" href="../Admin/Blank">Blank Page</a>
+                </div>
+            </div>
+        </li>*@
 
             <!-- Nav Item - Charts -->
             <!--<li class="nav-item">
-                <a class="nav-link" href="../Admin/Charts">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span>
-                </a>
-            </li>-->
-
+        <a class="nav-link" href="../Admin/Charts">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Charts</span>
+        </a>
+    </li>-->
             <!-- Nav Item - Tables -->
             <!--<li class="nav-item">
-                <a class="nav-link" href="../Admin/Tables">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span>
-                </a>
-            </li>-->
-
+        <a class="nav-link" href="../Admin/Tables">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Tables</span>
+        </a>
+    </li>-->
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -175,11 +190,11 @@
             </div>
 
             <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
+            @*<div class="sidebar-card d-none d-lg-flex">
                 <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
                 <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
+            </div>*@
 
         </ul>
         <!-- End of Sidebar -->

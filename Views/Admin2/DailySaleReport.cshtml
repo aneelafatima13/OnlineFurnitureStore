@@ -1,0 +1,45 @@
+﻿@using OnlineFurnitureStore.DAL
+@model List<Tbl_ShippingDetails>
+
+@{
+    ViewBag.Title = "DailySaleReport";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="card shadow mb-3">
+        <div class="card-header py-3">
+            <h6 class="m-3 font-weight-bold text-primary">
+                <i class="fas fa-fw fa-table"></i><span>Daily Sale Report by Total Revenue</span>
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Shipping Date</th>
+                            <th>Amount Paid</th>
+                            <th>Member Name</th>
+
+                            <!-- Add additional columns as needed -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var shippingDetail in Model)
+                        {
+                        <tr>
+                            <td>@shippingDetail.ShippingDate</td>
+                            <td>@shippingDetail.AmountPaid</td>
+                            <td>@(shippingDetail.Tbl_Members.FirstName + " " + shippingDetail.Tbl_Members.LastName)</td>
+
+                            <!-- Add additional columns as needed -->
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
