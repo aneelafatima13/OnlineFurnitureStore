@@ -42,7 +42,7 @@
                             <!-- Add additional columns as needed -->
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="cartDetailsBody">
                         @foreach (var cartProductDetail in Model)
                         {
                             <tr>
@@ -66,30 +66,64 @@
     </div>
 </div>
 @section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
     <script>
         $(document).ready(function () {
-            $('.city-name').click(function () {
-                var city = $(this).text();
-                var cityList = [];
+            // Array of cities in Pakistan
+            var cities = ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Multan", "Gujranwala", "Hyderabad", "Peshawar", "Quetta", "Sialkot", "Bahawalpur", "Sargodha", "Sukkur", "Larkana", "Sheikhupura", "Mirpur Khas", "Rahimyar Khan", "Gujrat", "Jhang", "Mardan", "Kasur", "Dera Ghazi Khan", "Sahiwal", "Nawabshah", "Mingora", "Okara", "Miran Shah", "Chiniot", "Kamoke", "Sadiqabad", "Burewala", "Jacobabad", "Muzaffargarh", "Muridke", "Jhelum", "Shikarpur", "Hafizabad", "Kohat", "Khanpur", "Khuzdar", "Dadu", "Gojra", "Mandi Bahauddin", "Tando Allahyar", "Daska", "Pakpattan", "Bahawalnagar", "Tando Adam", "Khairpur", "Chishtian", "Abbottabad", "Jaranwala", "Ahmadpur East", "Vihari", "Kamalia", "Kot Addu", "Khushab", "Wazirabad", "Dera Ismail Khan", "Chakwal", "Swabi", "Lodhran", "Nowshera", "Charsadda", "Thatta", "Karak", "Haveli"];
 
-                // Iterate through each city name and add it to the cityList array
-                $('.city-name').each(function () {
-                    cityList.push($(this).text());
+            $('#cityList').append($('<option>', {
+                value: '',
+                text: 'Select City'
+            }));
+
+            // Populate the dropdown options
+            $.each(cities, function (index, city) {
+                $('#cityList').append($('<option>', {
+                    value: city,
+                    text: city
+                }));
+            });
+
+            // Event listener for dropdown change
+            $('#cityList').change(function () {
+                var selectedCity = $(this).val();
+                fetchCartDetailsByCity(selectedCity);
+            });
+
+            // Function to fetch cart details by city using AJAX
+            function fetchCartDetailsByCity(city) {
+                $.ajax({
+                    url: '@Url.Action("GetCartDetailsByCity", "Admin2")',
+                    type: 'GET',
+                    data: { city: city },
+                    success: function (data) {
+                        // Clear previous table rows
+                        $('#cartDetailsBody').empty();
+                        // Append new table rows with fetched data
+                        $.each(data, function (index, item) {
+                            var formattedDate = moment(item.CartDate).format('YYYY-MM-DD HH:mm:ss');
+
+                            $('#cartDetailsBody').append('<tr>' +
+                                '<td>' + item.City + '</td>' +
+                                '<td>' + item.MemberName + '</td>' +
+                                '<td>' + item.ProductName + '</td>' +
+                                '<td>' + item.CartProductQuantity + '</td>' +
+                                '<td>' + item.CartProductTotalPrice + '</td>' +
+                                '<td>' + formattedDate + '</td>' + // Use formatted date here
+                                '<td>' + item.Address + '</td>' +
+                                '<td>' + item.Country + '</td>' +
+                                '<td>' + item.AmountPaid + '</td>' +
+                                '<td>' + item.PaymentType + '</td>' +
+                                '</tr>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
                 });
-
-                // Remove duplicates from the cityList array
-                var uniqueCityList = [...new Set(cityList)];
-
-                // Populate the dropdown list with unique city names
-                $('#cityList').empty();
-                uniqueCityList.forEach(function (cityName) {
-                    $('#cityList').append($('<option>
-            ').text(cityName));
-            });
-
-                // Show the dropdown list
-                $('#cityDropdown').show();
-            });
+            }
         });
     </script>
 

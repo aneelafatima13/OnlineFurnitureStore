@@ -12,9 +12,21 @@
 
     <div class="card shadow mb-3">
         <div class="card-header py-3">
-            <h6 class="m-3 font-weight-bold text-primary">
-                <i class="fas fa-fw fa-table"></i><span>Sale Report by Payment Type</span>
-            </h6>
+            <div class="row">
+                <div class="col-sm-7">
+                    <h6 class="m-3 font-weight-bold text-primary">
+                        <i class="fas fa-fw fa-table"></i><span>Sale Report by Payment Type</span>
+                    </h6>
+                </div>
+                <div class="col-sm-5">
+                    <div id="paymentTypeDropdown" class="fa-pull-right">
+                        <select id="paymentTypeList" class="form-control">
+                            <option>cash on delivery</option>
+                            <option>by debit card</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -38,20 +50,20 @@
                     <tbody>
                         @foreach (var cartProductDetail in Model)
                         {
-                        <tr>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
-                            <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
-                            <td>@cartProductDetail.Tbl_Product.ProductName</td>
-                            <td>@cartProductDetail.CartProductQuantity</td>
-                            <td>@cartProductDetail.CartProductTotalPrice</td>
-                            <td>@cartProductDetail.CartDate</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
+                            <tr>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
+                                <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
+                                <td>@cartProductDetail.Tbl_Product.ProductName</td>
+                                <td>@cartProductDetail.CartProductQuantity</td>
+                                <td>@cartProductDetail.CartProductTotalPrice</td>
+                                <td>@cartProductDetail.CartDate</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
 
-                            <!-- Add additional columns as needed -->
-                        </tr>
+                                <!-- Add additional columns as needed -->
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -59,3 +71,52 @@
         </div>
     </div>
 </div>
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            
+
+            // Event listener for dropdown change
+            $('#paymentTypeListList').change(function () {
+                var selectedPaymentTypeList = $(this).val();
+                fetchCartDetailsByPaymentType(selectedPaymentTypeList);
+            });
+
+            // Function to fetch cart details by city using AJAX
+            function fetchCartDetailsByPaymentType(city) {
+                $.ajax({
+                    url: '@Url.Action("GetCartDetailsByPaymentType", "Admin2")',
+                    type: 'GET',
+                    data: { city: city },
+                    success: function (data) {
+                        // Clear previous table rows
+                        $('#cartDetailsBody').empty();
+                        // Append new table rows with fetched data
+                        $.each(data, function (index, item) {
+                            var formattedDate = moment(item.CartDate).format('YYYY-MM-DD HH:mm:ss');
+
+                            $('#cartDetailsBody').append('<tr>' +
+                                '<td>' + item.City + '</td>' +
+                                '<td>' + item.MemberName + '</td>' +
+                                '<td>' + item.ProductName + '</td>' +
+                                '<td>' + item.CartProductQuantity + '</td>' +
+                                '<td>' + item.CartProductTotalPrice + '</td>' +
+                                '<td>' + formattedDate + '</td>' + // Use formatted date here
+                                '<td>' + item.Address + '</td>' +
+                                '<td>' + item.Country + '</td>' +
+                                '<td>' + item.AmountPaid + '</td>' +
+                                '<td>' + item.PaymentType + '</td>' +
+                                '</tr>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+    </script>
+
+}

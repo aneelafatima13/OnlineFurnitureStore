@@ -54,10 +54,55 @@ namespace OnlineFurnitureStore.Controllers
             var cartProductDetails = db.Tbl_Cart.Where(c => c.Tbl_ShippingDetails.City == "Lahore").ToList();
             return View(cartProductDetails);
         }
+
+        public ActionResult GetCartDetailsByCity(string city)
+        {
+            // Filter cart details based on the selected city
+            var cartDetails = db.Tbl_Cart
+                                .Where(c => c.Tbl_ShippingDetails.City == city)
+                                .Select(c => new
+                                {
+                                    City = c.Tbl_ShippingDetails.City,
+                                    MemberName = c.Tbl_Members.FirstName + " " + c.Tbl_Members.LastName,
+                                    ProductName = c.Tbl_Product.ProductName,
+                                    CartProductQuantity = c.CartProductQuantity,
+                                    CartProductTotalPrice = c.CartProductTotalPrice,
+                                    CartDate = c.CartDate,
+                                    Address = c.Tbl_ShippingDetails.Adress,
+                                    Country = c.Tbl_ShippingDetails.Country,
+                                    AmountPaid = c.Tbl_ShippingDetails.AmountPaid,
+                                    PaymentType = c.Tbl_ShippingDetails.PaymentType
+                                })
+                                .ToList();
+
+            return Json(cartDetails, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult DailySaleReportbyCountry()
         {
             var cartProductDetails = db.Tbl_Cart.Where(c => c.Tbl_ShippingDetails.Country == "Pakistan").ToList();
             return View(cartProductDetails);
+        }
+        public ActionResult GetCartDetailsByCountry(string country)
+        {
+            // Filter cart details based on the selected city
+            var cartDetails = db.Tbl_Cart
+                                .Where(c => c.Tbl_ShippingDetails.Country == country)
+                                .Select(c => new
+                                {
+                                    Country = c.Tbl_ShippingDetails.Country,
+                                    MemberName = c.Tbl_Members.FirstName + " " + c.Tbl_Members.LastName,
+                                    ProductName = c.Tbl_Product.ProductName,
+                                    CartProductQuantity = c.CartProductQuantity,
+                                    CartProductTotalPrice = c.CartProductTotalPrice,
+                                    CartDate = c.CartDate,
+                                    Address = c.Tbl_ShippingDetails.Adress,
+                                    City = c.Tbl_ShippingDetails.City,
+                                    AmountPaid = c.Tbl_ShippingDetails.AmountPaid,
+                                    PaymentType = c.Tbl_ShippingDetails.PaymentType
+                                })
+                                .ToList();
+
+            return Json(cartDetails, JsonRequestBehavior.AllowGet);
         }
         public ActionResult DailySaleReportbyPaymentType()
         {

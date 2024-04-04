@@ -8,9 +8,20 @@
 
     <div class="card shadow mb-3">
         <div class="card-header py-3">
-            <h6 class="m-3 font-weight-bold text-primary">
-                <i class="fas fa-fw fa-table"></i><span>Sale Report by Country</span>
-            </h6>
+            <div class="row">
+                <div class="col-sm-7">
+                    <h6 class="m-3 font-weight-bold text-primary">
+                        <i class="fas fa-fw fa-table"></i><span>Sale Report by Country</span>
+                    </h6>
+                </div>
+                <div class="col-sm-5">
+                    <div id="countryDropdown" class="fa-pull-right">
+                        <select id="countryList" class="form-control">
+                            <!-- Dropdown options will be populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -30,22 +41,22 @@
                             <!-- Add additional columns as needed -->
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="cartDetailsBody">
                         @foreach (var cartProductDetail in Model)
                         {
-                        <tr>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
-                            <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
-                            <td>@cartProductDetail.Tbl_Product.ProductName</td>
-                            <td>@cartProductDetail.CartProductQuantity</td>
-                            <td>@cartProductDetail.CartProductTotalPrice</td>
-                            <td>@cartProductDetail.CartDate</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
-                            <!-- Add additional columns as needed -->
-                        </tr>
+                            <tr>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
+                                <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
+                                <td>@cartProductDetail.Tbl_Product.ProductName</td>
+                                <td>@cartProductDetail.CartProductQuantity</td>
+                                <td>@cartProductDetail.CartProductTotalPrice</td>
+                                <td>@cartProductDetail.CartDate</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
+                                <!-- Add additional columns as needed -->
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -53,3 +64,91 @@
         </div>
     </div>
 </div>
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Array of cities in Pakistan
+            var countries = [
+                "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+                "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+                "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia",
+                "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+                "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+                "Fiji", "Finland", "France",
+                "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+                "Haiti", "Honduras", "Hungary",
+                "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast",
+                "Jamaica", "Japan", "Jordan",
+                "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan",
+                "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+                "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+                "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+                "Oman",
+                "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+                "Qatar",
+                "Romania", "Russia", "Rwanda",
+                "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+                "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+                "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+                "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+                "Yemen",
+                "Zambia", "Zimbabwe"
+            ];
+
+            $('#countryList').append($('<option>', {
+                value: '',
+                text: 'Select Country'
+            }));
+
+            // Populate the dropdown options
+            $.each(countries, function (index, country) {
+                $('#countryList').append($('<option>', {
+                    value: country,
+                    text: country
+                }));
+            });
+
+            // Event listener for dropdown change
+            $('#countryList').change(function () {
+                var selectedCountry = $(this).val();
+                fetchCartDetailsByCountry(selectedCountry);
+            });
+
+            // Function to fetch cart details by city using AJAX
+            function fetchCartDetailsByCountry(country) {
+                $.ajax({
+                    url: '@Url.Action("GetCartDetailsByCountry", "Admin2")',
+                    type: 'GET',
+                    data: { country: country },
+                    success: function (data) {
+                        // Clear previous table rows
+                        $('#cartDetailsBody').empty();
+                        // Append new table rows with fetched data
+                        $.each(data, function (index, item) {
+                            var formattedDate = moment(item.CartDate).format('YYYY-MM-DD HH:mm:ss');
+
+                            $('#cartDetailsBody').append('<tr>' +
+                                '<td>' + item.Country + '</td>' +
+                                '<td>' + item.MemberName + '</td>' +
+                                '<td>' + item.ProductName + '</td>' +
+                                '<td>' + item.CartProductQuantity + '</td>' +
+                                '<td>' + item.CartProductTotalPrice + '</td>' +
+                                '<td>' + formattedDate + '</td>' + // Use formatted date here
+                                '<td>' + item.Address + '</td>' +
+                                '<td>' + item.City + '</td>' +
+                                '<td>' + item.AmountPaid + '</td>' +
+                                '<td>' + item.PaymentType + '</td>' +
+                                '</tr>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+    </script>
+
+}
