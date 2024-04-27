@@ -11,10 +11,26 @@
 
     <div class="card shadow mb-3">
         <div class="card-header py-3">
-            <h6 class="m-3 font-weight-bold text-primary">
-                <i class="fas fa-fw fa-table"></i><span>Sale Report by Members</span>
-            </h6>
+            <div class="row">
+                <div class="col-sm-7">
+                    <h6 class="m-3 font-weight-bold text-primary">
+                        <i class="fas fa-fw fa-table"></i><span>Sale Report by Members</span>
+                    </h6>
+                </div>
+                <div class="col-sm-5">
+                    <div id="countryDropdown" class="fa-pull-right">
+                        <select id="membersList" class="form-control">
+                            <option>Select Members</option>
+                            @foreach (var member in ViewBag.Members)
+                            {
+                                <option value="@member.MemberId">@member.FirstName @member.LastName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
+       
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -33,23 +49,22 @@
                             <!-- Add additional columns as needed -->
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="cartDetailsBody">
                         @foreach (var cartProductDetail in Model)
                         {
-                        <tr>
-
-                            <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
-                            <td>@cartProductDetail.Tbl_Product.ProductName</td>
-                            <td>@cartProductDetail.CartProductQuantity</td>
-                            <td>@cartProductDetail.CartProductTotalPrice</td>
-                            <td>@cartProductDetail.CartDate</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
-                            <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
-                            <!-- Add additional columns as needed -->
-                        </tr>
+                            <tr>
+                                <td>@(cartProductDetail.Tbl_Members.FirstName + " " + cartProductDetail.Tbl_Members.LastName)</td>
+                                <td>@cartProductDetail.Tbl_Product.ProductName</td>
+                                <td>@cartProductDetail.CartProductQuantity</td>
+                                <td>@cartProductDetail.CartProductTotalPrice</td>
+                                <td>@cartProductDetail.CartDate</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.Adress</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.City</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.Country</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.AmountPaid</td>
+                                <td>@cartProductDetail.Tbl_ShippingDetails.PaymentType</td>
+                                <!-- Add additional columns as needed -->
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -57,3 +72,49 @@
         </div>
     </div>
 </div>
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function () {
+           
+            // Event listener for dropdown change
+            $('#membersList').change(function () {
+                var selectedMember = $(this).val();
+                fetchCartDetailsByMember(selectedMember);
+            });
+
+            // Function to fetch cart details by city using AJAX
+            function fetchCartDetailsByMember(member) {
+                $.ajax({
+                    url: '@Url.Action("GetCartDetailsByMember", "Admin2")',
+                    type: 'GET',
+                    data: { member: member },
+                    success: function (data) {
+                        // Clear previous table rows
+                        $('#cartDetailsBody').empty();
+                        // Append new table rows with fetched data
+                        $.each(data, function (index, item) {
+                            var formattedDate = moment(item.CartDate).format('YYYY-MM-DD HH:mm:ss');
+
+                            $('#cartDetailsBody').append('<tr>' +
+                                '<td>' + item.MemberName + '</td>' +
+                                '<td>' + item.ProductName + '</td>' +
+                                '<td>' + item.CartProductQuantity + '</td>' +
+                                '<td>' + item.CartProductTotalPrice + '</td>' +
+                                '<td>' + formattedDate + '</td>' + // Use formatted date here
+                                '<td>' + item.Address + '</td>' +
+                                '<td>' + item.City + '</td>' +
+                                '<td>' + item.Country + '</td>' +
+                                '<td>' + item.AmountPaid + '</td>' +
+                                '<td>' + item.PaymentType + '</td>' +
+                                '</tr>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+    </script>
+}
