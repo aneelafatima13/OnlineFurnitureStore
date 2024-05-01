@@ -119,8 +119,18 @@
         contentType: 'application/json',
         data: JSON.stringify({ cartItems: cartItems }),
         success: function (response) {
-            // Handle success response
-            console.log('Data sent successfully');
+            //// Handle success response
+            //console.log('Data sent successfully');
+            if (response.success) {
+                // Handle success
+                console.log("Data sent successfully");
+                $(".saveCart").prop("disabled", true);
+            // Redirect to the CartDone action with memberId and shippingDetailId
+            window.location.href = '@Url.Action("CartDone", "Home")?memberId=' + response.memberId + '&shippingDetailId=' + response.shippingDetailId;
+            } else {
+                // Handle other cases where success is false
+                console.error('Error:', response.message);
+            }
         },
         error: function (xhr, status, error) {
             // Handle error response

@@ -1016,7 +1016,46 @@ a:focus {
   color: #fff;
   margin-top: 35px;
 }
+.brand_section button {
+    display: inline-block;
+    padding: 12px 45px;
+    background-color: #24d278;
+    color: #ffffff;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    border-radius: 30px;
+    color: #fff;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+.brand_section button:hover {
+    background-color: transparent;
+    border-color: #24d278;
+    color: #24d278;
+}
 
+.brand_section .srchbtn button {
+    display: inline-block;
+    padding: 10px;
+    background-color: #24d278;
+    color: #ffffff;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    color: #fff;
+    margin-top: 2px;
+    margin-bottom: 5px;
+    margin-right: 8px;
+}
+
+.brand_section .srchbtn button:hover {
+    background-color: transparent;
+    border-color: #24d278;
+    color: #24d278;
+}
 .contact_section button:hover {
   background-color: transparent;
   border-color: #24d278;

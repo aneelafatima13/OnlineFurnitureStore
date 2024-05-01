@@ -1,0 +1,91 @@
+﻿@model IEnumerable<OnlineFurnitureStore.DAL.Tbl_Cart>
+@*@model IEnumerable < System.Linq.IGrouping <
+    System.Tuple<System.Nullable<System.DateTime>, string, string, string, System.Nullable<decimal>, string, string>,
+    OnlineFurnitureStore.DAL.Tbl_Cart>>*@
+@{
+    ViewBag.Title = "ViewPreviousOrders";
+    Layout = "~/Views/Shared/_SubPageLayout.cshtml";
+}
+
+<div class="sub_page">
+    <!-- brand section -->
+    <br />
+    <section class="brand_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="heading_container">
+                        <h2>
+                            @ViewBag.MemberName Orders List
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <br />
+            @foreach (var itemGroup in Model.GroupBy(item => new
+            {
+                item.CartDate,
+                item.Tbl_ShippingDetails.Adress,
+                item.Tbl_ShippingDetails.City,
+                item.Tbl_ShippingDetails.Country,
+                item.Tbl_ShippingDetails.AmountPaid,
+                item.Tbl_ShippingDetails.PaymentType,
+                item.Tbl_CartStatus.CartStatus
+            }))
+            {
+                var firstItem = itemGroup.First(); // Get the first item in the group
+                var cartStatus = firstItem.Tbl_CartStatus.CartStatus;
+               
+                <button class="dropdown-button">
+                    Date Time: @Html.DisplayFor(modelItem => firstItem.CartDate)
+                </button>
+                <br />
+
+                <table class="@(cartStatus == "Received" ? "table table-primary" :
+                    cartStatus == "Delivered" ? "table table-success" :
+                    cartStatus == "On Hold" ? "table table-secondary" :
+                    cartStatus == "Canceled" ? "table table-danger" : "table table-bordered")">
+
+                    <tr>
+
+                        <th>Cart Status</th>
+                        <td colspan="3">@Html.DisplayFor(modelItem => firstItem.Tbl_CartStatus.CartStatus)</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td colspan="3">@Html.DisplayFor(modelItem => firstItem.Tbl_ShippingDetails.Adress)</td>
+                    </tr>
+                    <tr>
+                        <th>City</th>
+                        <td>@Html.DisplayFor(modelItem => firstItem.Tbl_ShippingDetails.City)</td>
+                        <th>Country</th>
+                        <td>@Html.DisplayFor(modelItem => firstItem.Tbl_ShippingDetails.Country)</td>
+                    </tr>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Product Price</th>
+                        <th>Product Quantity</th>
+                        <th>Product Total Price</th>
+                    </tr>
+                    @foreach (var item in itemGroup)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Tbl_Product.ProductName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Tbl_Product.Price)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CartProductQuantity)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CartProductTotalPrice)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th>Payment Type</th>
+                        <td>@Html.DisplayFor(modelItem => firstItem.Tbl_ShippingDetails.PaymentType)</td>
+                        <th>Total Amount</th>
+                        <td>@Html.DisplayFor(modelItem => firstItem.Tbl_ShippingDetails.AmountPaid)</td>
+                    </tr>
+                </table>
+                <br />
+            }
+
+        </div>
+    </section>
+</div>

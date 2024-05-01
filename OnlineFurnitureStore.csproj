@@ -1950,6 +1950,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CategoryDetail.cs" />
+    <Compile Include="Models\Home\CartDoneViewModel.cs" />
     <Compile Include="Models\Home\HomeIndexViewModel.cs" />
     <Compile Include="Models\Home\Item.cs" />
     <Compile Include="Models\Shopping.cs" />
@@ -2198,6 +2199,8 @@
     <Content Include="Views\Admin2\DailySaleReportbyCartStatus.cshtml" />
     <Content Include="Views\Admin2\RecentOrders.cshtml" />
     <Content Include="Views\Admin2\PreviousMonthOrders.cshtml" />
+    <Content Include="Views\Home\CartDone.cshtml" />
+    <Content Include="Views\Home\ViewPreviousOrders.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

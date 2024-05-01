@@ -27,13 +27,18 @@
                         <div>
                             @Html.Password("password",null, new { placeholder = "Password" })
                         </div>
-                        <div class="d-flex ">
-                            <button>
+                        <div>
+                            <button type="submit" name="buttonType" value="checkout">
                                 Checkout Details
                             </button> <span> | </span>
-                            <a href="@Url.Action("Membership", "Home")">
-                                No Account Add Membership
-                            </a>
+                            <button type="submit" name="buttonType" value="orders">
+                                View Previous Orders
+                            </button><br /><br />
+                                                 @*<div>
+                                                     <a href="@Url.Action("Membership", "Home")" style="padding-top:100%">
+                                                         No Account Add Membership
+                                                     </a>
+                                                 </div>*@
                         </div>
                     }
                 </div>

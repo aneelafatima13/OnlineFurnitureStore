@@ -74,100 +74,6 @@ namespace OnlineFurnitureStore.Controllers
             }
         }
 
-        //public ActionResult AddToCart(int productId, int quantity, string url)
-        //{
-        //    if (Session["cart"] == null)
-        //    {
-        //        List<Item> cart = new List<Item>();
-        //        var product = ctx.Tbl_Product.Find(productId);
-        //        cart.Add(new Item()
-        //        {
-        //            Product = product,
-        //            Quantity = 1
-        //        });
-        //        Session["cart"] = cart;
-        //    }
-        //    else
-        //    {
-        //        List<Item> cart = (List<Item>)Session["cart"];
-        //        var count = cart.Count();
-        //        var product = ctx.Tbl_Product.Find(productId);
-        //        for (int i = 0; i < count; i++)
-        //        {
-        //            if (cart[i].Product.ProductId == productId)
-        //            {
-        //                int prevQty = cart[i].Quantity;
-        //                cart.Remove(cart[i]);
-        //                cart.Add(new Item()
-        //                {
-        //                    Product = product,
-        //                    Quantity = prevQty + 1
-        //                });
-        //                break;
-        //            }
-        //            else
-        //            {
-        //                var prd = cart.Where(x => x.Product.ProductId == productId).SingleOrDefault();
-        //                if (prd == null)
-        //                {
-        //                    cart.Add(new Item()
-        //                    {
-        //                        Product = product,
-        //                        Quantity = 1
-        //                    });
-        //                }
-        //            }
-        //        }
-        //        Session["cart"] = cart;
-        //    }
-        //    return Redirect(url);
-        //}
-
-        //public ActionResult AddToCart(int productId, string url)
-        //{
-        //    if (Session["cart"] == null)
-        //    {
-        //        AddProductToCart(productId);
-        //    }
-        //    else
-        //    {
-        //        List<Item> cart = (List<Item>)Session["cart"];
-        //        var existingItem = FindItemInCart(productId, cart);
-        //        if (existingItem != null)
-        //        {
-        //            IncreaseQuantity(existingItem);
-        //        }
-        //        else
-        //        {
-        //            AddProductToCart(productId);
-        //        }
-        //    }
-        //    return Redirect(url);
-        //}
-
-        //private void AddProductToCart(int productId)
-        //{
-        //    var product = ctx.Tbl_Product.Find(productId);
-        //    List<Item> cart = new List<Item>();
-        //    cart.Add(new Item()
-        //    {
-        //        Product = product,
-        //        Quantity = 1
-        //    });
-        //    Session["cart"] = cart;
-        //}
-
-        //private Item FindItemInCart(int productId, List<Item> cart)
-        //{
-        //    return cart.FirstOrDefault(item => item.Product.ProductId == productId);
-        //}
-
-        //private void IncreaseQuantity(Item item)
-        //{
-        //    item.Quantity++;
-        //}
-
-
         public ActionResult RemoveFromCartIndex(int productId)
         {
             List<Item> cart = (List<Item>)Session["cart"];
@@ -197,16 +103,6 @@ namespace OnlineFurnitureStore.Controllers
             Session["cart"] = cart;
             return Redirect("Shop");
         }
-
-        //public ActionResult Checkout()
-        //{
-        //    return View();
-        //}
-
-        //public ActionResult CheckoutDetails()
-        //{
-        //    return View();
-        //}
 
         public ActionResult DecreaseQty(int productId)
         {
@@ -278,16 +174,9 @@ namespace OnlineFurnitureStore.Controllers
         {
             var products = _unitofwork.GetProducts(ProductName, Category, Price, Quantity, ActiveFlag, page);
 
-            //if (Request.IsAjaxRequest())
-            //    return PartialView("_List", employees);
-            //else
+           
                 return View(products);
         }
-        //public ActionResult Shop(string search, int? page)
-        //{
-        //    HomeIndexViewModel model = new HomeIndexViewModel();
-        //    return View(model.CreateModel(search, 20, page));
-        //}
 
         public ActionResult Furniture()
         {
@@ -298,46 +187,6 @@ namespace OnlineFurnitureStore.Controllers
         {
             return View();
         }
-        public ActionResult LoginMembership()
-        {
-            return View();
-        }
-
-        public ActionResult AllShippingDetails()
-        {
-            return View();
-        }
-
-       
-
-        [HttpPost]
-        public ActionResult LoginMembership(string email, string password)
-        {
-            // Simple validation (you should implement a more robust validation)
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                ViewBag.ErrorMessage = "Email and password are required.";
-                return View();
-            }
-
-            // Check if the provided email and password match an employee
-            var member = ctx.Tbl_Members.SingleOrDefault(e => e.EmailId == email && e.Password == password);
-
-            if (member != null)
-            {
-                // Store the employee id in TempData
-                Session["MemberId"] = member.MemberId;
-
-                // Redirect to AttendanceSheet with the employee's ID
-                return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
-            }
-            else
-            {
-                ViewBag.ErrorMessage = "Invalid email or password.";
-                return View();
-            }
-        }
-
 
         [HttpPost]
         public ActionResult Membership(Tbl_Members member, string url)
@@ -346,62 +195,39 @@ namespace OnlineFurnitureStore.Controllers
             {
                 //if (ModelState.IsValid)
                 //{
-                    // Server-side validation for ConfirmPassword
-                    if (member.Password != member.ConfirmPassword)
-                    {
-                        ModelState.AddModelError("ConfirmPassword", "Passwords do not match");
-                        return View(); // Return the view with validation errors
-                    }
+                // Server-side validation for ConfirmPassword
+                if (member.Password != member.ConfirmPassword)
+                {
+                    ModelState.AddModelError("ConfirmPassword", "Passwords do not match");
+                    return View(); // Return the view with validation errors
+                }
 
-                    // Set IsActive to true for all records
-                    member.IsActive = true;
-                    member.CreateOn = DateTime.Now;
+                // Set IsActive to true for all records
+                member.IsActive = true;
+                member.CreateOn = DateTime.Now;
 
-                    ctx.Tbl_Members.Add(member);
-                    ctx.SaveChanges();
+                ctx.Tbl_Members.Add(member);
+                ctx.SaveChanges();
 
-                    Session["MemberId"] = member.MemberId;
+                Session["MemberId"] = member.MemberId;
 
-                    // Redirect to appropriate action based on 'url'
-                    //if (url == "CheckoutDetails")
-                    //{
-                    //    return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
-                    //}
-                    //else
-                    if (url == "AllShippingDetails")
-                    {
-                        return Json(new { MemberId = member.MemberId });
-                    }
-                    else
-                    {
-                        return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
-                        //ViewBag.ErrorMessage = "Invalid redirection URL";
-                        //return View("Error"); // Handle unknown URL
-                    }
+                // Redirect to appropriate action based on 'url'
+                //if (url == "CheckoutDetails")
+                //{
+                //    return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
                 //}
                 //else
-                //{
-                //    //if (url == "CheckoutDetails")
-                //    //{
-                //    //    return View(member);
-                //    //    //return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
-                //    //}
-                //    //else 
-                //    if (url == "AllShippingDetails")
-                //    {
-                //        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                //        return Json(new { Errors = errors });
-                //        //return Json(new { MemberId = member.MemberId });
-                //    }
-                //    else
-                //    {
-                //        return View(member);
-                //        //ViewBag.ErrorMessage = "Invalid redirection URL";
-                //        //return View("Error"); // Handle unknown URL
-                //    }
-                //    // Model is invalid, return the view with validation errors
-                //    //return View(member);
-                //}
+                if (url == "AllShippingDetails")
+                {
+                    return Json(new { MemberId = member.MemberId });
+                }
+                else
+                {
+                    return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                    //ViewBag.ErrorMessage = "Invalid redirection URL";
+                    //return View("Error"); // Handle unknown URL
+                }
+
             }
             catch (DbUpdateException ex)
             {
@@ -416,6 +242,68 @@ namespace OnlineFurnitureStore.Controllers
                 return View("Error");
             }
         }
+
+
+        public ActionResult LoginMembership()
+        {
+            return View();
+        }
+
+        public ActionResult AllShippingDetails()
+        {
+            return View();
+        }
+
+       
+
+        [HttpPost]
+        public ActionResult LoginMembership(string email, string password, string buttonType)
+        {
+            // Simple validation (you should implement a more robust validation)
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ViewBag.ErrorMessage = "Email and password are required.";
+                return View();
+            }
+
+            // Check if the provided email and password match a member
+            var member = ctx.Tbl_Members.SingleOrDefault(e => e.EmailId == email && e.Password == password);
+
+            if (member != null)
+            {
+                // Store the member id in TempData
+                Session["MemberId"] = member.MemberId;
+
+                // Redirect based on the button clicked
+                if (buttonType == "checkout")
+                {
+                    return RedirectToAction("CheckoutDetails", new { id = member.MemberId });
+                }
+                else if (buttonType == "orders")
+                {
+                    return RedirectToAction("ViewPreviousOrders", new { memberId = member.MemberId });
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Invalid email or password.";
+            }
+
+            // If no button is clicked or invalid credentials, return to the same view
+            return View();
+        }
+
+        public ActionResult ViewPreviousOrders(int memberId)
+        {
+            // Retrieve all products associated with the specified member
+            var products = ctx.Tbl_Cart.Where(p => p.MemberId == memberId).OrderByDescending(p => p.CartDate).ToList();
+           
+            var member = ctx.Tbl_Members.Find(memberId);
+            ViewBag.MemberName = $"{member.FirstName} {member.LastName}";
+            // Pass the list of products to the view
+            return View(products);
+        }
+
 
         public ActionResult CheckoutDetails()
         {
@@ -466,111 +354,7 @@ namespace OnlineFurnitureStore.Controllers
                 return View("Error");
             }
         }
-
-        public ActionResult EditCheckoutDetails()
-        {
-            // Retrieve the member ID from the session
-            int? memberId = Session["MemberId"] as int?;
-
-            if (memberId.HasValue)
-            {
-                // Retrieve the member details based on memberId
-                var member = ctx.Tbl_Members.Find(memberId);
-
-                if (member != null)
-                {
-                    ViewBag.MemberName = $"{member.FirstName} {member.LastName}";
-                    ViewBag.MemberId = member.MemberId;
-                    // Retrieve existing shipping details for the member, if any
-                    var shippingDetails = ctx.Tbl_ShippingDetails.FirstOrDefault(sd => sd.MemberId == memberId);
-
-                    // Create a model or use ViewBag to pass data to the view
-                    var shippingDetailsModel = new Tbl_ShippingDetails
-                    {
-                        MemberId = memberId.Value,
-                        Adress = shippingDetails?.Adress,
-                        Country = shippingDetails?.Country,
-                        State = shippingDetails?.State,
-                        City = shippingDetails?.City,
-                        ZipCode = shippingDetails?.ZipCode,
-                        PaymentType = shippingDetails?.PaymentType,
-                        // Other properties...
-
-                        // Set AmountPaid to null to ensure it's displayed as blank in the view
-                        AmountPaid = null
-                    };
-
-                    return PartialView("_ShippingDetails",shippingDetailsModel);
-                }
-                else
-                {
-                    // Handle the case when the member is not found
-                    ViewBag.ErrorMessage = "Member not found.";
-                    return View("Error");
-                }
-            }
-            else
-            {
-                // Handle the case when the member ID is missing or invalid
-                ViewBag.ErrorMessage = "Member ID is missing or invalid.";
-                return View("Error");
-            }
-        }
-
-        //[HttpPost]
-        //public ActionResult CheckoutDetails(Tbl_ShippingDetails shippingDetails)
-        //{
-        //    try
-        //    {
-        //        // Check if the shipping details already exist for the member
-        //        var existingShippingDetails = ctx.Tbl_ShippingDetails.FirstOrDefault(sd => sd.MemberId == shippingDetails.MemberId);
-
-        //        if (existingShippingDetails == null)
-        //        {
-        //            // Set the shipping date for new shipping details
-        //            shippingDetails.ShippingDate = DateTime.Now;
-
-        //            // Add new shipping details to the database
-        //            ctx.Tbl_ShippingDetails.Add(shippingDetails);
-        //        }
-        //        else
-        //        {
-        //            // Update existing shipping details
-        //            existingShippingDetails.Adress = shippingDetails.Adress;
-        //            existingShippingDetails.Country = shippingDetails.Country;
-        //            existingShippingDetails.State = shippingDetails.State;
-        //            existingShippingDetails.City = shippingDetails.City;
-        //            existingShippingDetails.ZipCode = shippingDetails.ZipCode;
-        //            existingShippingDetails.PaymentType = shippingDetails.PaymentType;
-        //            // Update other properties as needed
-
-        //            // Set the shipping date for existing shipping details
-        //            existingShippingDetails.ShippingDate = DateTime.Now;
-        //        }
-
-        //        // Save changes to the database
-        //        ctx.SaveChanges();
-
-        //        Session["MemberId"] = shippingDetails.MemberId;
-        //        Session["ShippingId"] = shippingDetails.ShippingDetailId;
-
-        //        // Prepare the data you want to return
-        //        var data = new
-        //        {
-        //            MemberId = shippingDetails.MemberId,
-        //            ShippingId = shippingDetails.ShippingDetailId
-        //        };
-
-        //        // Return a JSON result with the data
-        //        return Json(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exceptions or errors
-        //        ViewBag.ErrorMessage = "An error occurred while saving shipping details.";
-        //        return View("Error");
-        //    }
-        //}
+        
 
         [HttpPost]
         public ActionResult CheckoutDetails(Tbl_ShippingDetails shippingDetails)
@@ -650,6 +434,123 @@ namespace OnlineFurnitureStore.Controllers
                 return View("Error");
             }
         }
+
+        [HttpPost]
+        public ActionResult SaveCartItems(List<Tbl_Cart> cartItems)
+        {
+            try
+            {
+                // Validate if cartItems is not null and has items
+                if (cartItems != null && cartItems.Count > 0)
+                {
+                    foreach (var cartItem in cartItems)
+                    {
+                        cartItem.CartStatusId = 1;
+                        cartItem.CartDate = DateTime.Now;
+                        ctx.Tbl_Cart.Add(cartItem);
+                        ctx.SaveChanges();
+                    }
+
+                    // Get the member ID and shipping detail ID from the first cart item
+                    var memberId = cartItems.FirstOrDefault().MemberId;
+                    var shippingDetailId = cartItems.FirstOrDefault().ShippingId;
+
+                    if (memberId != null && shippingDetailId != null)
+                    {
+                        return Json(new { success = true, memberId, shippingDetailId });
+                        // Redirect to CartDone action with member ID and shipping detail ID
+                        //return RedirectToAction("CartDone", new { memberId, shippingDetailId });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Error getting member ID or shipping detail ID" });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "No cart items received" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                return Json(new { success = false, message = "Error saving cart items: " + ex.Message });
+            }
+        }
+
+
+        public ActionResult CartDone(int? memberId, int? shippingDetailId)
+        {
+            if (memberId != null && shippingDetailId != null)
+            {
+                var products = ctx.Tbl_Cart.Where(p => p.MemberId == memberId).OrderByDescending(p => p.CartDate).ToList();
+                var member = ctx.Tbl_Members.Find(memberId);
+                ViewBag.MemberName = $"{member.FirstName} {member.LastName}";
+                var shippingDetails = ctx.Tbl_ShippingDetails.FirstOrDefault(s => s.ShippingDetailId == shippingDetailId);
+                ViewBag.Address = shippingDetails.Adress;
+                ViewBag.City = shippingDetails.City;
+                ViewBag.Country = shippingDetails.Country;
+                // Pass the list of products to the view
+                return View(products);
+                
+               
+            }
+            else
+            {
+                return RedirectToAction("Shop", "Home"); // Redirect to some error page or homepage
+            }
+        }
+
+        public ActionResult EditCheckoutDetails()
+        {
+            // Retrieve the member ID from the session
+            int? memberId = Session["MemberId"] as int?;
+
+            if (memberId.HasValue)
+            {
+                // Retrieve the member details based on memberId
+                var member = ctx.Tbl_Members.Find(memberId);
+
+                if (member != null)
+                {
+                    ViewBag.MemberName = $"{member.FirstName} {member.LastName}";
+                    ViewBag.MemberId = member.MemberId;
+                    // Retrieve existing shipping details for the member, if any
+                    var shippingDetails = ctx.Tbl_ShippingDetails.FirstOrDefault(sd => sd.MemberId == memberId);
+
+                    // Create a model or use ViewBag to pass data to the view
+                    var shippingDetailsModel = new Tbl_ShippingDetails
+                    {
+                        MemberId = memberId.Value,
+                        Adress = shippingDetails?.Adress,
+                        Country = shippingDetails?.Country,
+                        State = shippingDetails?.State,
+                        City = shippingDetails?.City,
+                        ZipCode = shippingDetails?.ZipCode,
+                        PaymentType = shippingDetails?.PaymentType,
+                        // Other properties...
+
+                        // Set AmountPaid to null to ensure it's displayed as blank in the view
+                        AmountPaid = null
+                    };
+
+                    return PartialView("_ShippingDetails", shippingDetailsModel);
+                }
+                else
+                {
+                    // Handle the case when the member is not found
+                    ViewBag.ErrorMessage = "Member not found.";
+                    return View("Error");
+                }
+            }
+            else
+            {
+                // Handle the case when the member ID is missing or invalid
+                ViewBag.ErrorMessage = "Member ID is missing or invalid.";
+                return View("Error");
+            }
+        }
+
         public ActionResult ShowShippingDetails(int? memberId, int? shippingId)
         {
             if (memberId == null || shippingId == null)
@@ -678,45 +579,7 @@ namespace OnlineFurnitureStore.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult SaveCartItems(List<Tbl_Cart> cartItems)
-        {
-            try
-            {
-                // Validate if cartItems is not null and has items
-                if (cartItems != null && cartItems.Count > 0)
-                {
-                    //var cartStatus = ctx.Tbl_CartStatus.FirstOrDefault(c => c.CartStatusId == 1);
-
-                    //if (cartStatus == null)
-                    //{
-                    //    return Json(new { success = false, message = "Cart status with ID 1 not found" });
-                    //}
-                    // Process and save each received cart item to the database
-                    foreach (var cartItem in cartItems)
-                    {
-                        cartItem.CartStatusId = 1;
-                        cartItem.CartDate = DateTime.Now;
-                        ctx.Tbl_Cart.Add(cartItem);
-                        ctx.SaveChanges();
-
-                    }
-
-                    return Json(new { success = true, message = "Cart items saved successfully" });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "No cart items received" });
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions
-                return Json(new { success = false, message = "Error saving cart items: " + ex.Message });
-            }
-            
-        }
-
+       
         //[HttpPost]
         //public ActionResult AllShippingDetails(Tbl_ShippingDetails shippingDetails)
         //{
